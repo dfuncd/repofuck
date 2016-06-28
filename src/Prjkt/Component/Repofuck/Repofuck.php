@@ -29,10 +29,9 @@ class Repofuck
 	/**
 	 * Loads entities from an array
 	 *
-	 * @param array $resources
 	 * @return true
 	 */
-	public function loadResources(array $resources) : bool
+	public function loadResources() : bool
 	{
 		array_walk($resources, [$this, 'register']);
 
@@ -84,7 +83,7 @@ class Repofuck
 	 * @throws \Prjkt\Component\Repofuck\Exceptions\EntityNotDefined
 	 * @return $entity
 	 */
-	public function entity($entity = null)
+	public function entity($entity = null) : \Illuminate\Eloquent\Model
 	{
 		if ( ! count($this->entities) > 0 && $entity === null ) {
 			$entityName = strtolower(str_replace('Repository', '', get_class()));
@@ -107,7 +106,7 @@ class Repofuck
 	 * @param string $id
 	 * @return Object $entity
 	 */
-	public function find($id)
+	public function find($id) : \Illuminate\Eloquent\Model
 	{
 		return $this->entity->find($id);
 	}
@@ -152,7 +151,7 @@ class Repofuck
 	 * @param array $data
 	 * @return Object $entity
 	 */
-	public function create(array $data)
+	public function create(array $data) : \Illuminate\Eloquent\Model
 	{
 		$entity = $this->map($data, (new $this->entity))->save();
 
@@ -200,7 +199,7 @@ class Repofuck
 	 * @throws \Prjkt\Component\Repofuck\Exceptions\EntityNotDefined
 	 * @return object
 	 */
-	protected function map(array $inserts, $entity = null)
+	protected function map(array $inserts, $entity = null) : \Illuminate\Eloquent\Model
 	{
 		$entity = ! is_null($entity) ? $entity : $this->entity;
 
