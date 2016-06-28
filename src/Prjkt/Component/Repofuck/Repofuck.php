@@ -29,9 +29,10 @@ class Repofuck
 	/**
 	 * Loads entities from an array
 	 *
+	 * @param array $resources
 	 * @return true
 	 */
-	public function loadResources() : bool
+	public function loadResources(array $resources) : bool
 	{
 		array_walk($resources, [$this, 'register']);
 
