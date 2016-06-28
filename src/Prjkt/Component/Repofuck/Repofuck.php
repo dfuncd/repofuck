@@ -55,7 +55,7 @@ class Repofuck
 			$this->entities[$instance->getTable()] = $instance;
 		}
 
-		if ( $instance instanceof Repository) {
+		if ( $instance instanceof Repofuck) {
 			$repositoryName = strtolower(str_replace('Repository', '', $instance));
 			$this->repositories[$repositoryName] = $instance;
 		}
