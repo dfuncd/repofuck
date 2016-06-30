@@ -2,7 +2,7 @@
 
 namespace Prjk\Component\Repofuck;
 
-class Repofuck
+abstract class Repofuck
 {
 
 	/**
