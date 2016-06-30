@@ -40,7 +40,7 @@ class Repofuck
 	 */
 	public function __construct(\Illuminate\Container\Container $app)
 	{
-
+		$this->app = $app;
 	}
 
 	/**
