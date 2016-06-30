@@ -34,6 +34,13 @@ abstract class Repofuck
 	protected $repositories;
 
 	/**
+	 * Resources
+	 *
+	 * @var array
+	 */
+	protected $resources = [];
+
+	/**
 	 * Class constructor
 	 *
 	 * @param \Illuminate\Container\Container $app
@@ -41,17 +48,20 @@ abstract class Repofuck
 	public function __construct(\Illuminate\Container\Container $app)
 	{
 		$this->app = $app;
+
+		$this->loadResources();
 	}
 
 	/**
-	 * Loads entities from an array
+	 * Loads all resources for the repository to use
 	 *
-	 * @param array $resources
 	 * @return true
 	 */
-	public function loadResources(array $resources) : bool
+	public function loadResources() : bool
 	{
-		array_walk($resources, [$this, 'register']);
+		if ( count($this->resources) > 0 ) {
+			array_walk($resources, [$this, 'register']);
+		}
 
 		return true;
 	}
