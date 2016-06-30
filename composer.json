@@ -28,7 +28,7 @@
 
     "autoload": {
         "psr-4": {
-            "Prjkt\\Component\\Repofuck": "src/Prjkt/Component/Repofuck"
+            "Prjkt\\Component\\Repofuck\\": "src/Prjkt/Component/Repofuck"
         }
     }
 }
