@@ -8,7 +8,7 @@ class Repofuck
 	/**
 	 * Laravel's App instance
 	 *
-	 * @var \Illuminate\Foundation\Application $app
+	 * @var \Illuminate\Container\Container $app
 	 */
 	protected $app;
 
@@ -36,9 +36,9 @@ class Repofuck
 	/**
 	 * Class constructor
 	 *
-	 * @param \Illuminate\Foundation\Application $app
+	 * @param \Illuminate\Container\Container $app
 	 */
-	public function __construct(\Illuminate\Foundation\Application $app)
+	public function __construct(\Illuminate\Container\Container $app)
 	{
 
 	}
