@@ -76,7 +76,7 @@ abstract class Repofuck
 	public function register($instance) : bool
 	{
 		if ( ! is_object($instance) ) {
-			$instance = new $instance;
+			$instance = $this->app->make($instance);
 		}
 
 		if ( $instance instanceof \Illuminate\Eloquent\Model ) {
