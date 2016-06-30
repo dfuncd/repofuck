@@ -6,6 +6,13 @@ class Repofuck
 {
 
 	/**
+	 * Laravel's App instance
+	 *
+	 * @var \Illuminate\Foundation\Application $app
+	 */
+	protected $app;
+
+	/**
 	 * The current entity pointer
 	 *
 	 * @var object
@@ -25,6 +32,16 @@ class Repofuck
 	 * @var array
 	 */
 	protected $repositories;
+
+	/**
+	 * Class constructor
+	 *
+	 * @param \Illuminate\Foundation\Application $app
+	 */
+	public function __construct(\Illuminate\Foundation\Application $app)
+	{
+
+	}
 
 	/**
 	 * Loads entities from an array
