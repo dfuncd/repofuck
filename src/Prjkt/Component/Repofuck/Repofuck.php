@@ -111,9 +111,9 @@ abstract class Repofuck
 	 *
 	 * @param string $entity
 	 * @throws \Prjkt\Component\Repofuck\Exceptions\EntityNotDefined
-	 * @return $entity
+	 * @return \Illuminate\Eloquent\Model
 	 */
-	public function entity($entity = null) : \Illuminate\Eloquent\Model
+	public function entity(string $entity = null) : \Illuminate\Eloquent\Model
 	{
 		if ( ! count($this->entities) > 0 && $entity === null ) {
 			$entityName = strtolower(str_replace('Repository', '', get_class()));
