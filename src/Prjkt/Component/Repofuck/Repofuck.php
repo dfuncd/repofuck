@@ -78,7 +78,9 @@ class Repofuck
 			$this->repositories[$repositoryName] = $instance;
 		}
 
-		$this->entity = $this->setEntity($this->entity());
+		if ( ! is_object($this->entity) ) {
+			$this->entity = $this->setEntity($this->entity());
+		}
 
 		return true;
 	}
