@@ -195,7 +195,7 @@ abstract class Repofuck
 	 * @param integer|array $identifier
 	 * @return Object $entity
 	 */
-	public function update(array $data, $identifier)
+	public function update(array $data, $identifier) : Illuminate\Eloquent\Model
 	{
 		$entity = $this->entity->first($identifier);
 		$entity = $this->map($data)->save();
