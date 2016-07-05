@@ -228,7 +228,7 @@ abstract class Repofuck
 	 * @param array $keys
 	 * @param array $inserts
 	 * @throws \Prjkt\Component\Repofuck\Exceptions\EntityNotDefined
-	 * @return object
+	 * @return \Illuminate\Eloquent\Model
 	 */
 	protected function map(array $keys, array $inserts, $entity = null) : \Illuminate\Eloquent\Model
 	{
