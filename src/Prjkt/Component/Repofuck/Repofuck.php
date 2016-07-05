@@ -225,11 +225,12 @@ abstract class Repofuck
 	/**
 	 * Mass assignment
 	 *
+	 * @param array $keys
 	 * @param array $inserts
 	 * @throws \Prjkt\Component\Repofuck\Exceptions\EntityNotDefined
 	 * @return object
 	 */
-	protected function map(array $inserts, $entity = null) : \Illuminate\Eloquent\Model
+	protected function map(array $keys, array $inserts, $entity = null) : \Illuminate\Eloquent\Model
 	{
 		$entity = ! is_null($entity) ? $entity : $this->entity;
 
@@ -239,6 +240,10 @@ abstract class Repofuck
 
 		foreach($inserts as $key => $val)
 		{
+			if ( ! in_array($keys, $key) ) {
+				break;
+			}
+
 			$entity->{$key} = $val;
 		}
 
