@@ -2,6 +2,11 @@
 
 namespace Prjk\Component\Repofuck;
 
+use Illuminate\{
+	Container\Container,
+	Eloquent\Model
+}
+
 abstract class Repofuck
 {
 
