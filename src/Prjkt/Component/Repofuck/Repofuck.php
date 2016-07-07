@@ -183,13 +183,13 @@ abstract class Repofuck
 	/**
 	 * Creates a new model
 	 *
-	 * @param array $keys
 	 * @param array $data
+	 * @param array $keys
 	 * @return Object $entity
 	 */
-	public function create(array $keys, array $data) : Model
+	public function create(array $data, array $keys = []) : Model
 	{
-		$entity = $this->map($data, (new $this->entity))->save();
+		$entity = $this->map($data, $keys, (new $this->entity))->save();
 
 		return $this->entity;
 	}
@@ -197,15 +197,15 @@ abstract class Repofuck
 	/**
 	 * Updates the entity
 	 *
-	 * @param array $keys
 	 * @param array $data
+	 * @param array $keys
 	 * @param integer|array $identifier
 	 * @return Object $entity
 	 */
-	public function update(array $keys, array $data, $identifier) : Model
+	public function update(array $data, array $keys = [], $identifier) : Model
 	{
 		$entity = $this->entity->first($identifier);
-		$entity = $this->map($data)->save();
+		$entity = $this->map($data, $keys)->save();
 
 		return $this->entity;
 	}
@@ -232,12 +232,12 @@ abstract class Repofuck
 	/**
 	 * Mass assignment
 	 *
-	 * @param array $keys
 	 * @param array $inserts
+	 * @param array $keys
 	 * @throws \Prjkt\Component\Repofuck\Exceptions\EntityNotDefined
 	 * @return \Illuminate\Eloquent\Model
 	 */
-	protected function map(array $keys, array $inserts, $entity = null) : Model
+	protected function map(array $inserts, array $keys = [], $entity = null) : Model
 	{
 		$entity = ! is_null($entity) ? $entity : $this->entity;
 
