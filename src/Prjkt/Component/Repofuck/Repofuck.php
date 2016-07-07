@@ -247,7 +247,7 @@ abstract class Repofuck
 
 		foreach($inserts as $key => $val)
 		{
-			if ( ! in_array($keys, $key) ) {
+			if ( count($keys) > 0 && ! in_array($keys, $key) ) {
 				break;
 			}
 
