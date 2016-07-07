@@ -198,11 +198,11 @@ abstract class Repofuck
 	 * Updates the entity
 	 *
 	 * @param array $data
-	 * @param array $keys
 	 * @param integer|array $identifier
+	 * @param array $keys
 	 * @return Object $entity
 	 */
-	public function update(array $data, array $keys = [], $identifier) : Model
+	public function update(array $data, $identifier, array $keys = []) : Model
 	{
 		$entity = $this->entity->first($identifier);
 		$entity = $this->map($data, $keys)->save();
