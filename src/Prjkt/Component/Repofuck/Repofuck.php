@@ -183,10 +183,11 @@ abstract class Repofuck
 	/**
 	 * Creates a new model
 	 *
+	 * @param array $keys
 	 * @param array $data
 	 * @return Object $entity
 	 */
-	public function create(array $data) : Model
+	public function create(array $keys, array $data) : Model
 	{
 		$entity = $this->map($data, (new $this->entity))->save();
 
@@ -196,11 +197,12 @@ abstract class Repofuck
 	/**
 	 * Updates the entity
 	 *
+	 * @param array $keys
 	 * @param array $data
 	 * @param integer|array $identifier
 	 * @return Object $entity
 	 */
-	public function update(array $data, $identifier) : Model
+	public function update(array $keys, array $data, $identifier) : Model
 	{
 		$entity = $this->entity->first($identifier);
 		$entity = $this->map($data)->save();
