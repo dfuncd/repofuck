@@ -2,6 +2,11 @@
 
 namespace Prjk\Component\Repofuck;
 
+use Illuminate\{
+	Container\Container,
+	Eloquent\Model
+}
+
 abstract class Repofuck
 {
 
@@ -45,7 +50,7 @@ abstract class Repofuck
 	 *
 	 * @param \Illuminate\Container\Container $app
 	 */
-	public function __construct(\Illuminate\Container\Container $app)
+	public function __construct(Container $app)
 	{
 		$this->app = $app;
 
@@ -79,7 +84,7 @@ abstract class Repofuck
 			$instance = $this->app->make($instance);
 		}
 
-		if ( $instance instanceof \Illuminate\Eloquent\Model ) {
+		if ( $instance instanceof Model ) {
 			$this->entities[$instance->getTable()] = $instance;
 		}
 
@@ -113,7 +118,7 @@ abstract class Repofuck
 	 * @throws \Prjkt\Component\Repofuck\Exceptions\EntityNotDefined
 	 * @return \Illuminate\Eloquent\Model
 	 */
-	public function entity(string $entity = null) : \Illuminate\Eloquent\Model
+	public function entity(string $entity = null) : Model
 	{
 		if ( ! count($this->entities) > 0 && $entity === null ) {
 			$entityName = strtolower(str_replace('Repository', '', get_class()));
@@ -136,7 +141,7 @@ abstract class Repofuck
 	 * @param string $id
 	 * @return Object $entity
 	 */
-	public function find($id) : \Illuminate\Eloquent\Model
+	public function find($id) : Model
 	{
 		return $this->entity->find($id);
 	}
@@ -178,10 +183,11 @@ abstract class Repofuck
 	/**
 	 * Creates a new model
 	 *
+	 * @param array $keys
 	 * @param array $data
 	 * @return Object $entity
 	 */
-	public function create(array $data) : \Illuminate\Eloquent\Model
+	public function create(array $keys, array $data) : Model
 	{
 		$entity = $this->map($data, (new $this->entity))->save();
 
@@ -191,11 +197,12 @@ abstract class Repofuck
 	/**
 	 * Updates the entity
 	 *
+	 * @param array $keys
 	 * @param array $data
 	 * @param integer|array $identifier
 	 * @return Object $entity
 	 */
-	public function update(array $data, $identifier) : Illuminate\Eloquent\Model
+	public function update(array $keys, array $data, $identifier) : Model
 	{
 		$entity = $this->entity->first($identifier);
 		$entity = $this->map($data)->save();
@@ -228,9 +235,9 @@ abstract class Repofuck
 	 * @param array $keys
 	 * @param array $inserts
 	 * @throws \Prjkt\Component\Repofuck\Exceptions\EntityNotDefined
-	 * @return object
+	 * @return \Illuminate\Eloquent\Model
 	 */
-	protected function map(array $keys, array $inserts, $entity = null) : \Illuminate\Eloquent\Model
+	protected function map(array $keys, array $inserts, $entity = null) : Model
 	{
 		$entity = ! is_null($entity) ? $entity : $this->entity;
 
