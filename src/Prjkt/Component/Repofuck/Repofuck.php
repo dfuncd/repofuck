@@ -121,10 +121,11 @@ abstract class Repofuck
 	public function entity(string $entity = null) : Model
 	{
 		if ( ! count($this->entities) > 0 && $entity === null ) {
-			$entityName = strtolower(str_replace('Repository', '', get_class()));
+			$repositoryName = (new \ReflectionClass($this))->getShortName();
+			$parsedName = strtolower(str_replace('Repository', '', $repositoryName));
 
-			return array_key_exists($entityName, $this->entities) ?
-				$this->entities[$entityName]:
+			return array_key_exists($parsedName, $this->entities) ?
+				$this->entities[$parsedName]:
 				$this->entities[0];
 		}
 
