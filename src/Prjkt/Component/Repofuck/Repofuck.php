@@ -125,7 +125,7 @@ abstract class Repofuck
 
 			return array_key_exists($entityName, $this->entities) ?
 				$this->entities[$entityName]:
-				$this->entities[0];
+				array_values($this->entities)[0];
 		}
 
 		if ( array_key_exists($entity, $this->entities) ) {
