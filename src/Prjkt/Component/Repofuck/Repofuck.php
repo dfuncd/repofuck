@@ -133,7 +133,7 @@ abstract class Repofuck
 			return $this->entity = $this->entities[$entity];
 		}
 
-		throw new Exceptions\EntityNotDefined($e);
+		throw new Exceptions\EntityNotDefined;
 	}
 
 	/**
