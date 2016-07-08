@@ -176,7 +176,7 @@ abstract class Repofuck
 	 * @param array $params
 	 * @return array
 	 */
-	public function get(array $params) : array
+	public function get(array $params = []) : array
 	{
 		return $this->entity->where($params)->get();
 	}
