@@ -29,14 +29,14 @@ abstract class Repofuck
 	 *
 	 * @var array
 	 */
-	protected $entities;
+	protected $entities = [];
 
 	/**
 	 * Repositories container
 	 *
 	 * @var array
 	 */
-	protected $repositories;
+	protected $repositories = [];
 
 	/**
 	 * Resources
@@ -65,7 +65,7 @@ abstract class Repofuck
 	public function loadResources() : bool
 	{
 		if ( count($this->resources) > 0 ) {
-			array_walk($resources, [$this, 'register']);
+			array_walk($this->resources, [$this, 'register']);
 		}
 
 		return true;
@@ -133,7 +133,7 @@ abstract class Repofuck
 			return $this->entity = $this->entities[$entity];
 		}
 
-		throw new Exceptions\EntityNotDefined($e);
+		throw new Exceptions\EntityNotDefined;
 	}
 
 	/**
@@ -176,7 +176,7 @@ abstract class Repofuck
 	 * @param array $params
 	 * @return array
 	 */
-	public function get(array $params) : array
+	public function get(array $params = []) : array
 	{
 		return $this->entity->where($params)->get();
 	}
