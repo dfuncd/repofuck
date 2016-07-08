@@ -152,7 +152,7 @@ abstract class Repofuck
 	 * Finds the first entity by the given parameters
 	 *
 	 * @param integer|array|string $param
-	 * @return Object $entity
+	 * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection
 	 */
 	public function first($params, $value = null)
 	{
@@ -177,7 +177,7 @@ abstract class Repofuck
 	 * @param array $params
 	 * @return array
 	 */
-	public function get(array $params = []) : array
+	public function get(array $params = []) : Collection
 	{
 		return $this->entity->where($params)->get();
 	}
@@ -187,7 +187,7 @@ abstract class Repofuck
 	 *
 	 * @param array $data
 	 * @param array $keys
-	 * @return Object $entity
+	 * @return \Illuminate\Eloquent\Model $entity
 	 */
 	public function create(array $data, array $keys = []) : Model
 	{
@@ -202,7 +202,7 @@ abstract class Repofuck
 	 * @param array $data
 	 * @param integer|array $identifier
 	 * @param array $keys
-	 * @return Object $entity
+	 * @return \Illuminate\Eloquent\Model $entity
 	 */
 	public function update(array $data, $identifier, array $keys = []) : Model
 	{
