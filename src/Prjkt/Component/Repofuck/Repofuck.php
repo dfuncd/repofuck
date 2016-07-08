@@ -73,6 +73,16 @@ abstract class Repofuck
 	}
 
 	/**
+	 * Resolves the name of the repository
+	 *
+	 * @return string
+	 */
+	protected function resolveRepoName()
+	{
+		return strtolower(str_replace('Repository', '', (new \ReflectionClass($this))->getShortName()));
+	}
+
+	/**
 	 * Registers an entity/repository to their appropriate containers
 	 *
 	 * @param string|object $instance
@@ -90,7 +100,7 @@ abstract class Repofuck
 		}
 
 		if ( $instance instanceof Repofuck) {
-			$repositoryName = strtolower(str_replace('Repository', '', $instance));
+			$repositoryName = $this->resolveRepoName();
 			$this->repositories[$repositoryName] = $instance;
 		}
 
@@ -122,8 +132,7 @@ abstract class Repofuck
 	public function entity(string $entity = null) : Model
 	{
 		if ( count($this->entities) > 0 && $entity === null ) {
-			$repositoryName = (new \ReflectionClass($this))->getShortName();
-			$parsedName = strtolower(str_replace('Repository', '', $repositoryName));
+			$parsedName = $this->resolveRepoName();
 
 			return array_key_exists($parsedName, $this->entities) ?
 				$this->entities[$parsedName]:
