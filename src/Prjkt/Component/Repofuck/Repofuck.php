@@ -120,7 +120,7 @@ abstract class Repofuck
 	 */
 	public function entity(string $entity = null) : Model
 	{
-		if ( ! count($this->entities) > 0 && $entity === null ) {
+		if ( count($this->entities) > 0 && $entity === null ) {
 			$repositoryName = (new \ReflectionClass($this))->getShortName();
 			$parsedName = strtolower(str_replace('Repository', '', $repositoryName));
 
