@@ -1,6 +1,6 @@
 <?php
 
-namespace Prjk\Component\Repofuck;
+namespace Prjkt\Component\Repofuck;
 
 use Illuminate\{
 	Container\Container,
