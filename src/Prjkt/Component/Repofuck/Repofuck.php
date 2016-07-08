@@ -4,7 +4,7 @@ namespace Prjkt\Component\Repofuck;
 
 use Illuminate\{
 	Container\Container,
-	Eloquent\Model
+	Database\Eloquent\Model
 };
 
 abstract class Repofuck
