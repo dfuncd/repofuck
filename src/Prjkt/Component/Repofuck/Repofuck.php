@@ -65,7 +65,7 @@ abstract class Repofuck
 	public function loadResources() : bool
 	{
 		if ( count($this->resources) > 0 ) {
-			array_walk($resources, [$this, 'register']);
+			array_walk($this->resources, [$this, 'register']);
 		}
 
 		return true;
