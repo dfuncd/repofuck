@@ -94,7 +94,7 @@ abstract class Repofuck
 		}
 
 		if ( ! is_object($this->entity) ) {
-			$this->entity = $this->setEntity($this->entity());
+			$this->setEntity($this->entity());
 		}
 
 		return true;
