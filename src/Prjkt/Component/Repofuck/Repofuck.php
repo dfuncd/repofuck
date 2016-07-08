@@ -29,14 +29,14 @@ abstract class Repofuck
 	 *
 	 * @var array
 	 */
-	protected $entities;
+	protected $entities = [];
 
 	/**
 	 * Repositories container
 	 *
 	 * @var array
 	 */
-	protected $repositories;
+	protected $repositories = [];
 
 	/**
 	 * Resources
