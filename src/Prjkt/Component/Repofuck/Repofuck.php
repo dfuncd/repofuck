@@ -95,15 +95,21 @@ abstract class Repofuck
 			$instance = $this->app->make($instance);
 		}
 
-		if ( $instance instanceof Model ) {
-			$this->entities[$instance->getTable()] = $instance;
+		switch($instance) {
+
+			// Adds the entity instance to the entities property
+			case ($instance instanceof Model):
+				$this->entities[$instance->getTable()] = $instance;
+			break;
+
+			// Adds the repository instance to the repositories property
+			case ($instance instanceof Repofuck):
+				$this->repositories[$this->resolveRepoName()] = $instance;
+			break;
+
 		}
 
-		if ( $instance instanceof Repofuck) {
-			$repositoryName = $this->resolveRepoName();
-			$this->repositories[$repositoryName] = $instance;
-		}
-
+		// If the entity property has not yet defined, set it with first configured entity
 		if ( ! is_object($this->entity) ) {
 			$this->setEntity($this->entity());
 		}
