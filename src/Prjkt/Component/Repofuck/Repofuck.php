@@ -165,16 +165,26 @@ abstract class Repofuck
 	 */
 	public function first($params, $value = null)
 	{
-		if ( is_numeric($params) ) {
-			$entity = $this->entity->find($id);
-		}
+		switch ($params) {
 
-		if ( is_array($params) ) {
-			$entity = $this->entity->where($params)->first();
-		}
+			case is_numeric($params):
 
-		if ( is_string($params) ) {
-			$entity = $this->entity->where($params, $value)->first();
+				$entity = $this->entity->find($id);
+
+			break;
+
+			case is_array($params):
+
+				$entity = $this->entity->where($params)->first();
+
+			break;
+
+			case is_string($params):
+
+				$entity = $this->entity->where($params, $value)->first();
+
+			break;
+
 		}
 
 		return $entity;
