@@ -291,14 +291,19 @@ abstract class Repofuck
 	 */
 	public function __get($key)
 	{
-		try {
-			if (array_key_exists($key, $this->entities)) return $this->entities[$key];
-			if (array_key_exists($key, $this->repositories)) return $this->repositories[$key];
+		switch($key) {
 
-			throw new Exceptions\ResourceNotFound;
-		} catch (Exceptions\ResourceNotFound $e) {
+			case array_key_exists($key, $this->entities):
+				return $this->entities[$key];
+			break;
+
+			case array_key_exists($key, $this->repositories):
+				return $this->repositories[$key];
+			break;
 
 		}
+
+		throw new Exceptions\ResourceNotFound;
 	}
 
 }
