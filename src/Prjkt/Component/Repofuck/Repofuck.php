@@ -221,9 +221,10 @@ abstract class Repofuck
 	 */
 	public function create(array $data, array $keys = []) : Model
 	{
-		$entity = $this->map($data, $keys, (new $this->entity))->save();
+		$entity = $this->map($data, $keys, (new $this->entity));
+		$entity->save();
 
-		return $this->entity;
+		return $entity;
 	}
 
 	/**
@@ -237,9 +238,10 @@ abstract class Repofuck
 	public function update(array $data, $identifier, array $keys = []) : Model
 	{
 		$entity = $this->entity->first($identifier);
-		$entity = $this->map($data, $keys)->save();
+		$entity = $this->map($data, $keys);
+		$entity->save();
 
-		return $this->entity;
+		return $entity;
 	}
 
 	/**
