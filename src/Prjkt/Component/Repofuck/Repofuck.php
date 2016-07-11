@@ -8,6 +8,11 @@ use Illuminate\{
 	Database\Eloquent\Collection
 };
 
+use Exceptions\{
+	EntityNotDefined,
+	ResourceNotFound
+};
+
 abstract class Repofuck
 {
 
@@ -269,7 +274,7 @@ abstract class Repofuck
 		$entity = ! is_null($entity) ? $entity : $this->entity;
 
 		if ( ! is_object($this->entity) ) {
-			throw new Exceptions\EntityNotDefined;
+			throw new EntityNotDefined;
 		}
 
 		foreach($inserts as $key => $val)
@@ -303,7 +308,7 @@ abstract class Repofuck
 
 		}
 
-		throw new Exceptions\ResourceNotFound;
+		throw new ResourceNotFound;
 	}
 
 }
