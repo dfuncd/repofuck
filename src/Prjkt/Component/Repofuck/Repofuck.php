@@ -223,7 +223,7 @@ abstract class Repofuck
 	{
 		$entity = $this->map($data, $keys, (new $this->entity))->save();
 
-		return $entity;
+		return $this->entity;
 	}
 
 	/**
@@ -239,7 +239,7 @@ abstract class Repofuck
 		$entity = $this->entity->first($identifier);
 		$entity = $this->map($data, $keys)->save();
 
-		return $entity;
+		return $this->entity;
 	}
 
 	/**
