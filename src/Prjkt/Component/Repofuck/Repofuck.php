@@ -8,6 +8,11 @@ use Illuminate\{
 	Database\Eloquent\Collection
 };
 
+use Exceptions\{
+	EntityNotDefined,
+	ResourceNotFound
+};
+
 abstract class Repofuck
 {
 
@@ -95,15 +100,21 @@ abstract class Repofuck
 			$instance = $this->app->make($instance);
 		}
 
-		if ( $instance instanceof Model ) {
-			$this->entities[$instance->getTable()] = $instance;
+		switch($instance) {
+
+			// Adds the entity instance to the entities property
+			case ($instance instanceof Model):
+				$this->entities[$instance->getTable()] = $instance;
+			break;
+
+			// Adds the repository instance to the repositories property
+			case ($instance instanceof Repofuck):
+				$this->repositories[$this->resolveRepoName()] = $instance;
+			break;
+
 		}
 
-		if ( $instance instanceof Repofuck) {
-			$repositoryName = $this->resolveRepoName();
-			$this->repositories[$repositoryName] = $instance;
-		}
-
+		// If the entity property has not yet defined, set it with first configured entity
 		if ( ! is_object($this->entity) ) {
 			$this->setEntity($this->entity());
 		}
@@ -212,7 +223,7 @@ abstract class Repofuck
 	{
 		$entity = $this->map($data, $keys, (new $this->entity))->save();
 
-		return $this->entity;
+		return $entity;
 	}
 
 	/**
@@ -228,7 +239,7 @@ abstract class Repofuck
 		$entity = $this->entity->first($identifier);
 		$entity = $this->map($data, $keys)->save();
 
-		return $this->entity;
+		return $entity;
 	}
 
 	/**
@@ -263,7 +274,7 @@ abstract class Repofuck
 		$entity = ! is_null($entity) ? $entity : $this->entity;
 
 		if ( ! is_object($this->entity) ) {
-			throw new Exceptions\EntityNotDefined;
+			throw new EntityNotDefined;
 		}
 
 		foreach($inserts as $key => $val)
@@ -285,14 +296,19 @@ abstract class Repofuck
 	 */
 	public function __get($key)
 	{
-		try {
-			if (array_key_exists($key, $this->entities)) return $this->entities[$key];
-			if (array_key_exists($key, $this->repositories)) return $this->repositories[$key];
+		switch($key) {
 
-			throw new Exceptions\ResourceNotFound;
-		} catch (Exceptions\ResourceNotFound $e) {
+			case array_key_exists($key, $this->entities):
+				return $this->entities[$key];
+			break;
+
+			case array_key_exists($key, $this->repositories):
+				return $this->repositories[$key];
+			break;
 
 		}
+
+		throw new ResourceNotFound;
 	}
 
 }
