@@ -4,10 +4,11 @@ namespace Prjkt\Component\Repofuck;
 
 use Closure;
 
-use Illuminate\{
-	Container\Container,
-	Database\Eloquent\Model,
-	Database\Eloquent\Collection
+use Illuminate\Container\Container;
+use Illuminate\Database\Eloquent\{
+	Model,
+	Collection,
+	Builder
 };
 
 use Exceptions\{
@@ -201,6 +202,25 @@ abstract class Repofuck
 		}
 
 		return $entity;
+	}
+
+	/**
+	 * Prepares the entity
+	 *
+	 * @param array $functions
+	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 */
+	public function prepare(array $functions) : \Prjkt\Component\Repofuck\Repofuck
+	{
+		$entity = $this->entity;
+
+		foreach($functions as $function => $functionParams) {
+			$entity = call_user_func_array([$entity, $function], [$functionParams]);
+		}
+
+		$this->setEntity($entity); // Persist the entity
+
+		return $this;
 	}
 
 	/**
