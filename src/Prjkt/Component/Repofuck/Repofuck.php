@@ -2,6 +2,8 @@
 
 namespace Prjkt\Component\Repofuck;
 
+use Closure;
+
 use Illuminate\{
 	Container\Container,
 	Database\Eloquent\Model,
@@ -207,8 +209,10 @@ abstract class Repofuck
 	 * @param array $params
 	 * @return array
 	 */
-	public function get(array $params = []) : Collection
+	public function get(array $params = [], Closure $callback = null) : Collection
 	{
+		$params = $callback instanceof Closure ? $this->executeCallback($callback, $params) : $params;
+
 		return $this->entity->where($params)->get();
 	}
 
@@ -219,9 +223,12 @@ abstract class Repofuck
 	 * @param array $keys
 	 * @return \Illuminate\Eloquent\Model $entity
 	 */
-	public function create(array $data, array $keys = []) : Model
+	public function create(array $data, array $keys = [], Closure $callback = null) : Model
 	{
-		$entity = $this->map($data, $keys, (new $this->entity))->save();
+		$data = $callback instanceof Closure ? $this->executeCallback($callback, $data) : $data;
+
+		$entity = $this->map($data, $keys, (new $this->entity));
+		$entity->save();
 
 		return $entity;
 	}
@@ -234,10 +241,13 @@ abstract class Repofuck
 	 * @param array $keys
 	 * @return \Illuminate\Eloquent\Model $entity
 	 */
-	public function update(array $data, $identifier, array $keys = []) : Model
+	public function update(array $data, $identifier, array $keys = [], Closure $callback = null) : Model
 	{
+		$data = $callback instanceof Closure ? $this->executeCallback($callback, $data) : $data;
+
 		$entity = $this->entity->first($identifier);
-		$entity = $this->map($data, $keys)->save();
+		$entity = $this->map($data, $keys);
+		$entity->save();
 
 		return $entity;
 	}
@@ -287,6 +297,18 @@ abstract class Repofuck
 		}
 
 		return $entity;
+	}
+
+	/**
+	 * Executes the callback
+	 *
+	 * @param array $data
+	 * @param Closure $callback
+	 * @return array
+	 */
+	protected function executeCallback(Closure $callback, array $data) : array
+	{
+		return call_user_func_array($callback, [$this, $data]);
 	}
 
 	/**
