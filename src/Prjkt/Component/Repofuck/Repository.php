@@ -16,7 +16,7 @@ use Exceptions\{
 	ResourceNotFound
 };
 
-abstract class Repofuck
+abstract class Repository
 {
 
 	/**
