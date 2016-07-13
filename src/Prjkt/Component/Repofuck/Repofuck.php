@@ -301,9 +301,9 @@ abstract class Repofuck
 	 */
 	protected function map(array $inserts, array $keys = [], $entity = null) : Model
 	{
-		$entity = ! is_null($entity) ? $entity : $this->entity;
+		$entity = is_null($entity) ? $this->entity : $entity;
 
-		if ( ! is_object($this->entity) ) {
+		if ( ! $this->entity instanceof Model ) {
 			throw new EntityNotDefined;
 		}
 
