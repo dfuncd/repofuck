@@ -307,13 +307,17 @@ abstract class Repofuck
 			throw new EntityNotDefined;
 		}
 
+		$fillable = $entity->getFillable();
+		
 		foreach($inserts as $key => $val)
 		{
 			if ( count($keys) > 0 && ! in_array($keys, $key) ) {
 				break;
 			}
 
-			$entity->{$key} = $val;
+			if (array_key_exists($key, $fillable)){
+				$entity->{$key} = $val;
+			}
 		}
 
 		return $entity;
