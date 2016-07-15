@@ -306,14 +306,14 @@ abstract class Repofuck
 		if ( ! $this->entity instanceof Model ) {
 			throw new EntityNotDefined;
 		}
-
+		
 		foreach($inserts as $key => $val)
 		{
-			if ( count($keys) > 0 && ! in_array($keys, $key) ) {
+			if ( count($keys) > 0 && ! in_array($key, $keys) ) {
 				break;
 			}
 
-			$entity->{$key} = $val;
+				$entity->{$key} = $val;
 		}
 
 		return $entity;
