@@ -311,13 +311,11 @@ abstract class Repofuck
 		
 		foreach($inserts as $key => $val)
 		{
-			if ( count($keys) > 0 && ! in_array($keys, $key) ) {
+			if ( count($keys) > 0 && ! in_array($key, $keys) ) {
 				break;
 			}
 
-			if (array_key_exists($key, $fillable)){
 				$entity->{$key} = $val;
-			}
 		}
 
 		return $entity;
