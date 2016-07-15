@@ -306,8 +306,6 @@ abstract class Repofuck
 		if ( ! $this->entity instanceof Model ) {
 			throw new EntityNotDefined;
 		}
-
-		$fillable = $entity->getFillable();
 		
 		foreach($inserts as $key => $val)
 		{
