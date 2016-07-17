@@ -305,10 +305,6 @@ abstract class Repofuck
 	{
 		$entity = $this->entity;
 
-		if ( ! is_object($this->entity) ) {
-			throw new EntityNotDefined;
-		}
-
 		if ( count($keys) > 0 ) {
 
 			foreach($inserts as $key => $val)
