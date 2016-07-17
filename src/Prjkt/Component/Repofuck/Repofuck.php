@@ -129,7 +129,7 @@ abstract class Repofuck
 	 * Sets the current entity
 	 *
 	 * @param string $entity
-	 * @return void
+	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
 	protected function setEntity(string $entity) : \Prjkt\Component\Repofuck\Repofuck
 	{
