@@ -131,9 +131,11 @@ abstract class Repofuck
 	 * @param Object $entity
 	 * @return void
 	 */
-	protected function setEntity($entity)
+	protected function setEntity($entity) : \Prjkt\Component\Repofuck\Repofuck
 	{
 		$this->entity = $entity;
+
+		return $this;
 	}
 
 	/**
