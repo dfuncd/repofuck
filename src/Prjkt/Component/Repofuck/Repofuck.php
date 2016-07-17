@@ -128,12 +128,12 @@ abstract class Repofuck
 	/**
 	 * Sets the current entity
 	 *
-	 * @param Object $entity
+	 * @param string $entity
 	 * @return void
 	 */
-	protected function setEntity($entity) : \Prjkt\Component\Repofuck\Repofuck
+	protected function setEntity(string $entity) : \Prjkt\Component\Repofuck\Repofuck
 	{
-		$this->entity = $entity;
+		$this->entity = $this->entity($entity);
 
 		return $this;
 	}
