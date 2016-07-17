@@ -307,14 +307,21 @@ abstract class Repofuck
 			throw new EntityNotDefined;
 		}
 
-		foreach($inserts as $key => $val)
-		{
-			if ( count($keys) > 0 && ! in_array($keys, $key) ) {
-				break;
+		if ( count($keys) > 0 ) {
+
+			foreach($inserts as $key => $val)
+			{
+				if ( ! in_array($key, $keys) ) {
+					break;
+				}
+
+				$entity->{$key} = $val;
 			}
 
-			$entity->{$key} = $val;
+			return $entity;
 		}
+
+		$entity = $entity->fill($inserts);
 
 		return $entity;
 	}
