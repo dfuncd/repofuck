@@ -301,13 +301,9 @@ abstract class Repofuck
 	 * @throws \Prjkt\Component\Repofuck\Exceptions\EntityNotDefined
 	 * @return \Illuminate\Eloquent\Model
 	 */
-	protected function map(array $inserts, array $keys = [], $entity = null) : Model
+	protected function map(array $inserts, array $keys = []) : Model
 	{
-		$entity = is_null($entity) ? $this->entity : $entity;
-
-		if ( ! $this->entity instanceof Model ) {
-			throw new EntityNotDefined;
-		}
+		$entity = $this->entity;
 
 		if ( count($keys) > 0 ) {
 
