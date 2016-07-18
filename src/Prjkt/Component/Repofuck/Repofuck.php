@@ -119,7 +119,7 @@ abstract class Repofuck
 
 		// If the entity property has not yet defined, set it with first configured entity
 		if ( ! is_object($this->entity) ) {
-			$this->setEntity($this->entity()->getTable());
+			$this->setEntity($this->entity());
 		}
 
 		return true;
