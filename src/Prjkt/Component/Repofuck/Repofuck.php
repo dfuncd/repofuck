@@ -212,15 +212,13 @@ abstract class Repofuck
 	 * @param array $functions
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	public function prepare(array $functions) : \Prjkt\Component\Repofuck\Repofuck
+	public function prepare(array $functions, array $parameters) : \Prjkt\Component\Repofuck\Repofuck
 	{
-		$entity = $this->entity;
-
-		foreach($functions as $function => $functionParams) {
-			$entity = call_user_func_array([$entity, $function], [$functionParams]);
-		}
-
-		$this->setEntity($entity); // Persist the entity
+		array_walk($functions, function ($function) use ($parameters) {
+			$this->setEntity(
+				call_user_func_array($function, [$parameters, $entity = $this->entity])
+			);
+		});
 
 		return $this;
 	}
