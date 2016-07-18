@@ -235,14 +235,11 @@ abstract class Repofuck
 	/**
 	 * Gets an entity by parameters
 	 *
-	 * @param array $params
 	 * @return array
 	 */
-	public function get(array $params = [], Closure $callback = null) : Collection
+	public function get() : Collection
 	{
-		$params = $callback instanceof Closure ? $this->executeCallback($callback, $params) : $params;
-
-		return $this->entity->where($params)->get();
+		return $this->entity->get();
 	}
 
 	/**
