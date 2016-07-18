@@ -13,7 +13,9 @@ use Illuminate\Database\Eloquent\{
 
 use Exceptions\{
 	EntityNotDefined,
-	ResourceNotFound
+	ResourceNotFound,
+	InvalidCallback,
+	InvalidCallbackReturn
 };
 
 abstract class Repofuck
@@ -53,6 +55,20 @@ abstract class Repofuck
 	 * @var array
 	 */
 	protected $resources = [];
+
+	/**
+	 * Data
+	 * 
+	 * @var array
+	 */
+	protected $data = [];
+
+	/**
+	 * Keys
+	 *
+	 * @var array
+	 */
+	protected $keys = [];
 
 	/**
 	 * Class constructor
@@ -148,6 +164,52 @@ abstract class Repofuck
 	}
 
 	/**
+	 * Set the data for the repository
+	 *
+	 * @param array
+	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 */
+	public function setData(array $data) : \Prjkt\Component\Repofuck\Repofuck
+	{
+		$this->data = $data;
+
+		return $this;
+	}
+
+	/**
+	 * Set the keys for the repository
+	 *
+	 * @param array
+	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 */
+	public function setKeys(array $keys) : \Prjkt\Component\Repofuck\Repofuck
+	{
+		$this->keys = $keys;
+
+		return $this;
+	}
+
+	/**
+	 * Get the data in the repository
+	 *
+	 * @return array
+	 */
+	public function getData() : array
+	{
+		return $this->data;
+	}
+
+	/**
+	 * Get the keys in the repository
+	 *
+	 * @return array
+	 */
+	public function getData() : array
+	{
+		return $this->keys;
+	}
+
+	/**
 	 * Returns the {first configured|inputted} entity
 	 *
 	 * @param string $entity
@@ -221,12 +283,23 @@ abstract class Repofuck
 	 * @param array $functions
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	public function prepare(array $functions, array $parameters) : \Prjkt\Component\Repofuck\Repofuck
+	public function prepare(array $functions, array $parameters = []) : \Prjkt\Component\Repofuck\Repofuck
 	{
+		$parameters = ! count($parameters) > 0 ? $this->getData() : $parameters;
+
 		array_walk($functions, function ($function) use ($parameters) {
-			$this->setEntity(
-				call_user_func_array($function, [$parameters, $entity = $this->entity])
-			);
+
+			if ( ! $function instanceof Closure ) {
+				throw new InvalidCallback;
+			}
+
+			$return = call_user_func_array($function, [$parameters, $this->entity]);
+
+			if ( ! $return instanceof Builder ) {
+				throw new InvalidCallbackReturn;
+			}
+
+			$this->setEntity($return);
 		});
 
 		return $this;
@@ -245,15 +318,11 @@ abstract class Repofuck
 	/**
 	 * Creates a new model
 	 *
-	 * @param array $data
-	 * @param array $keys
 	 * @return \Illuminate\Database\Eloquent\Model $entity
 	 */
-	public function create(array $data, array $keys = [], Closure $callback = null) : Model
+	public function create() : Model
 	{
-		$data = $callback instanceof Closure ? $this->executeCallback($callback, $data) : $data;
-
-		$entity = $this->map($data, $keys, (new $this->entity));
+		$entity = $this->map($this->getData(), $this->getkeys());
 		$entity->save();
 
 		return $entity;
@@ -262,17 +331,13 @@ abstract class Repofuck
 	/**
 	 * Updates the entity
 	 *
-	 * @param array $data
 	 * @param integer|array $identifier
-	 * @param array $keys
 	 * @return \Illuminate\Database\Eloquent\Model $entity
 	 */
-	public function update(array $data, $identifier, array $keys = [], Closure $callback = null) : Model
+	public function update($identifier) : Model
 	{
-		$data = $callback instanceof Closure ? $this->executeCallback($callback, $data) : $data;
-
 		$entity = $this->entity->first($identifier);
-		$entity = $this->map($data, $keys);
+		$entity = $this->map($this->getData(), $this->getkeys());
 		$entity->save();
 
 		return $entity;
