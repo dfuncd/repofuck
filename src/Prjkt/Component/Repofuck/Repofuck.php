@@ -131,9 +131,18 @@ abstract class Repofuck
 	 * @param string $entity
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	protected function setEntity(string $entity) : \Prjkt\Component\Repofuck\Repofuck
+	protected function setEntity($entity) : \Prjkt\Component\Repofuck\Repofuck
 	{
-		$this->entity = $this->entity($entity);
+		switch($entity)
+		{
+			case $entity instanceof Model || $entity instanceof Builder:
+				$this->entity = $entity;
+			break;
+				
+			case is_string($entity):
+				$this->entity = $this->entity($entity);
+			break;
+		}
 
 		return $this;
 	}
@@ -143,7 +152,7 @@ abstract class Repofuck
 	 *
 	 * @param string $entity
 	 * @throws \Prjkt\Component\Repofuck\Exceptions\EntityNotDefined
-	 * @return \Illuminate\Eloquent\Model
+	 * @return \Illuminate\Database\Eloquent\Model
 	 */
 	public function entity(string $entity = null) : Model
 	{
@@ -212,15 +221,13 @@ abstract class Repofuck
 	 * @param array $functions
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	public function prepare(array $functions) : \Prjkt\Component\Repofuck\Repofuck
+	public function prepare(array $functions, array $parameters) : \Prjkt\Component\Repofuck\Repofuck
 	{
-		$entity = $this->entity;
-
-		foreach($functions as $function => $functionParams) {
-			$entity = call_user_func_array([$entity, $function], [$functionParams]);
-		}
-
-		$this->setEntity($entity); // Persist the entity
+		array_walk($functions, function ($function) use ($parameters) {
+			$this->setEntity(
+				call_user_func_array($function, [$parameters, $entity = $this->entity])
+			);
+		});
 
 		return $this;
 	}
@@ -228,14 +235,11 @@ abstract class Repofuck
 	/**
 	 * Gets an entity by parameters
 	 *
-	 * @param array $params
-	 * @return array
+	 * @return \Illuminate\Database\Eloquent\Collection
 	 */
-	public function get(array $params = [], Closure $callback = null) : Collection
+	public function get() : Collection
 	{
-		$params = $callback instanceof Closure ? $this->executeCallback($callback, $params) : $params;
-
-		return $this->entity->where($params)->get();
+		return $this->entity->get();
 	}
 
 	/**
@@ -243,7 +247,7 @@ abstract class Repofuck
 	 *
 	 * @param array $data
 	 * @param array $keys
-	 * @return \Illuminate\Eloquent\Model $entity
+	 * @return \Illuminate\Database\Eloquent\Model $entity
 	 */
 	public function create(array $data, array $keys = [], Closure $callback = null) : Model
 	{
@@ -261,7 +265,7 @@ abstract class Repofuck
 	 * @param array $data
 	 * @param integer|array $identifier
 	 * @param array $keys
-	 * @return \Illuminate\Eloquent\Model $entity
+	 * @return \Illuminate\Database\Eloquent\Model $entity
 	 */
 	public function update(array $data, $identifier, array $keys = [], Closure $callback = null) : Model
 	{
@@ -299,7 +303,7 @@ abstract class Repofuck
 	 * @param array $inserts
 	 * @param array $keys
 	 * @throws \Prjkt\Component\Repofuck\Exceptions\EntityNotDefined
-	 * @return \Illuminate\Eloquent\Model
+	 * @return \Illuminate\Database\Eloquent\Model
 	 */
 	protected function map(array $inserts, array $keys = []) : Model
 	{
