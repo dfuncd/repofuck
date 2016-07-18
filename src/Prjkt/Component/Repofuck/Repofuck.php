@@ -131,9 +131,18 @@ abstract class Repofuck
 	 * @param string $entity
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	protected function setEntity(string $entity) : \Prjkt\Component\Repofuck\Repofuck
+	protected function setEntity($entity) : \Prjkt\Component\Repofuck\Repofuck
 	{
-		$this->entity = $this->entity($entity);
+		switch($entity)
+		{
+			case $entity instanceof Model || $entity instanceof Builder:
+				$this->entity = $entity;
+			break;
+				
+			case is_string($entity):
+				$this->entity = $this->entity($entity);
+			break;
+		}
 
 		return $this;
 	}
