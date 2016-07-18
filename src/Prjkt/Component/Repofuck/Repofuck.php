@@ -204,7 +204,7 @@ abstract class Repofuck
 	 *
 	 * @return array
 	 */
-	public function getData() : array
+	public function getKeys() : array
 	{
 		return $this->keys;
 	}
