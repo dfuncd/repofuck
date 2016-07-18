@@ -152,7 +152,7 @@ abstract class Repofuck
 	 *
 	 * @param string $entity
 	 * @throws \Prjkt\Component\Repofuck\Exceptions\EntityNotDefined
-	 * @return \Illuminate\Eloquent\Model
+	 * @return \Illuminate\Database\Eloquent\Model
 	 */
 	public function entity(string $entity = null) : Model
 	{
@@ -235,7 +235,7 @@ abstract class Repofuck
 	/**
 	 * Gets an entity by parameters
 	 *
-	 * @return array
+	 * @return \Illuminate\Database\Eloquent\Collection
 	 */
 	public function get() : Collection
 	{
@@ -247,7 +247,7 @@ abstract class Repofuck
 	 *
 	 * @param array $data
 	 * @param array $keys
-	 * @return \Illuminate\Eloquent\Model $entity
+	 * @return \Illuminate\Database\Eloquent\Model $entity
 	 */
 	public function create(array $data, array $keys = [], Closure $callback = null) : Model
 	{
@@ -265,7 +265,7 @@ abstract class Repofuck
 	 * @param array $data
 	 * @param integer|array $identifier
 	 * @param array $keys
-	 * @return \Illuminate\Eloquent\Model $entity
+	 * @return \Illuminate\Database\Eloquent\Model $entity
 	 */
 	public function update(array $data, $identifier, array $keys = [], Closure $callback = null) : Model
 	{
@@ -303,7 +303,7 @@ abstract class Repofuck
 	 * @param array $inserts
 	 * @param array $keys
 	 * @throws \Prjkt\Component\Repofuck\Exceptions\EntityNotDefined
-	 * @return \Illuminate\Eloquent\Model
+	 * @return \Illuminate\Database\Eloquent\Model
 	 */
 	protected function map(array $inserts, array $keys = []) : Model
 	{
