@@ -9,7 +9,6 @@ Writing the same base repository class is tiring as fuck. Better to write my own
 ### Prerequisites
 * PHP v7
 * Illuminate v5.1 or v5.2 or v5.3
-	* Events
 	* Support
 	* Database
 	* Container
