@@ -12,7 +12,6 @@
 
     "require": {
         "php": ">=7.0.0",
-        "illuminate/events": "5.1.*|5.2.*|5.3.*",
         "illuminate/support": "5.1.*|5.2.*|5.3.*",
         "illuminate/database": "5.1.*|5.2.*|5.3.*",
         "illuminate/container": "5.1.*|5.2.*|5.3.*",

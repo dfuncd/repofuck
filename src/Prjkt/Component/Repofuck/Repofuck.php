@@ -280,27 +280,20 @@ abstract class Repofuck
 	/**
 	 * Prepares the entity
 	 *
-	 * @param array $functions
+	 * @param \Closure $function
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	public function prepare(array $functions, array $parameters = []) : \Prjkt\Component\Repofuck\Repofuck
+	public function prepare(Closure $function, array $parameters = []) : \Prjkt\Component\Repofuck\Repofuck
 	{
 		$parameters = ! count($parameters) > 0 ? $this->getData() : $parameters;
 
-		array_walk($functions, function ($function) use ($parameters) {
+		$return = call_user_func_array($function, [$parameters, $this->entity]);
 
-			if ( ! $function instanceof Closure ) {
-				throw new InvalidCallback;
-			}
+		if ( ! $return instanceof Builder ) {
+			throw new InvalidCallbackReturn;
+		}
 
-			$return = call_user_func_array($function, [$parameters, $this->entity]);
-
-			if ( ! $return instanceof Builder ) {
-				throw new InvalidCallbackReturn;
-			}
-
-			$this->setEntity($return);
-		});
+		$this->setEntity($return);
 
 		return $this;
 	}
