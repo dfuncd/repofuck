@@ -43,6 +43,13 @@ abstract class Repofuck
 	protected $entities = [];
 
 	/**
+	 * A repository pointer
+	 *
+	 * @var \Prjkt\Component\Repofuck\Repofuck
+	 */
+	protected $repository;
+
+	/**
 	 * Repositories container
 	 *
 	 * @var array
@@ -159,6 +166,19 @@ abstract class Repofuck
 				$this->entity = $this->entity($entity);
 			break;
 		}
+
+		return $this;
+	}
+
+	/**
+	 * Sets a repository pointer
+	 *
+	 * @param \Prjkt\Component\Repofuck\Repofuck $repository
+	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 */
+	public function setRepository(\Prjkt\Component\Repofuck\Repofuck $repository) : \Prjkt\Component\Repofuck\Repofuck
+	{
+		$this->repository = $repository;
 
 		return $this;
 	}
