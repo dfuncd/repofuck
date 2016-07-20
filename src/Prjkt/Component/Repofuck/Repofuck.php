@@ -269,6 +269,16 @@ abstract class Repofuck
 	}
 
 	/**
+	 * Returns the persisted repository
+	 *
+	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 */
+	public function repository() : \Prjkt\Component\Repofuck\Repofuck
+	{
+		return $this->repository;
+	}
+
+	/**
 	 * Finds an entity by its ID
 	 *
 	 * @param string $id
