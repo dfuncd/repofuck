@@ -280,21 +280,52 @@ abstract class Repofuck
 	/**
 	 * Prepares the entity
 	 *
-	 * @param \Closure $function
+	 * @param array $parameters
+	 * @param \Closure $function [default=null]
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	public function prepare(Closure $function, array $parameters = []) : \Prjkt\Component\Repofuck\Repofuck
+	public function prepare(array $parameters, Closure $function = null) : \Prjkt\Component\Repofuck\Repofuck
 	{
 		$parameters = ! count($parameters) > 0 ? $this->getData() : $parameters;
 
-		$return = call_user_func_array($function, [$parameters, $this->entity]);
+		if ( $function instanceof Closure ) {
 
-		if ( ! $return instanceof Builder ) {
-			throw new InvalidCallbackReturn;
+			$return = call_user_func_array($function, [$parameters, $this]);
+
+			switch($return)
+			{
+				case $return instanceof Builder:
+
+					// This will persist the entity throughout the repository for the next operation
+					$this->setEntity($return);
+
+				break;
+
+				case $return instanceof \Prjkt\Component\Repofuck\Repofuck:
+
+					// This will persist the repository for the next operation
+					// It also gives an advantage as the repository contained
+					// $this->setRepository($return);
+
+				break;
+
+				case is_array($return):
+
+					// This will persist the keys and data returned
+					// $this->setDataAndKeys($return);
+
+				break;
+
+				case 'default':
+					
+					// do nothing
+
+				break;
+			}
+
 		}
 
-		$this->setEntity($return);
-
+		// If there's a repository being persisted, return it, defer to self when there's none
 		return $this;
 	}
 
