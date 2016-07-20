@@ -43,6 +43,13 @@ abstract class Repofuck
 	protected $entities = [];
 
 	/**
+	 * A repository pointer
+	 *
+	 * @var \Prjkt\Component\Repofuck\Repofuck
+	 */
+	protected $repository;
+
+	/**
 	 * Repositories container
 	 *
 	 * @var array
@@ -164,6 +171,34 @@ abstract class Repofuck
 	}
 
 	/**
+	 * Sets a repository pointer
+	 *
+	 * @param \Prjkt\Component\Repofuck\Repofuck $repository
+	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 */
+	public function setRepository(\Prjkt\Component\Repofuck\Repofuck $repository) : \Prjkt\Component\Repofuck\Repofuck
+	{
+		$this->repository = $repository;
+
+		return $this;
+	}
+
+	/**
+	 * Set the data and keys for the repository
+	 *
+	 * @param array $parameters
+	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 */
+	public function setDataAndKeys(array $parameters) : \Prjkt\Component\Repofuck\Repofuck
+	{
+		$keys = array_keys($parameters);
+
+		$this->setKeys($keys)->setData($parameters);
+
+		return $this;
+	}
+
+	/**
 	 * Set the data for the repository
 	 *
 	 * @param array
@@ -234,6 +269,16 @@ abstract class Repofuck
 	}
 
 	/**
+	 * Returns the persisted repository
+	 *
+	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 */
+	public function repository() : \Prjkt\Component\Repofuck\Repofuck
+	{
+		return $this->repository;
+	}
+
+	/**
 	 * Finds an entity by its ID
 	 *
 	 * @param string $id
@@ -278,24 +323,56 @@ abstract class Repofuck
 	}
 
 	/**
-	 * Prepares the entity
+	 * Prepares the persistence of a repository or entity
 	 *
-	 * @param \Closure $function
+	 * @param array $parameters
+	 * @param \Closure $function [default=null]
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	public function prepare(Closure $function, array $parameters = []) : \Prjkt\Component\Repofuck\Repofuck
+	public function prepare(array $parameters, Closure $function = null) : \Prjkt\Component\Repofuck\Repofuck
 	{
 		$parameters = ! count($parameters) > 0 ? $this->getData() : $parameters;
 
-		$return = call_user_func_array($function, [$parameters, $this->entity]);
+		if ( $function instanceof Closure ) {
 
-		if ( ! $return instanceof Builder ) {
-			throw new InvalidCallbackReturn;
+			$return = call_user_func_array($function, [$parameters, $this]);
+
+			switch($return)
+			{
+				case $return instanceof Builder:
+
+					// This will persist the entity throughout the repository for the next operation
+					$this->setEntity($return);
+
+				break;
+
+				case $return instanceof \Prjkt\Component\Repofuck\Repofuck:
+
+					// This will persist the repository for the next operation
+					// It also gives an advantage as the repository contained
+					$this->setRepository($return);
+
+				break;
+
+				case is_array($return):
+
+					// This will persist the keys and data returned
+					$this->setDataAndKeys($return);
+
+				break;
+
+				case 'default':
+					
+					$this->setData($parameters);
+
+				break;
+			}
+
 		}
 
-		$this->setEntity($return);
-
-		return $this;
+		// If there's a repository being persisted, return it, defer to self when there's none
+		return is_object($this->repository) && $this->repository instanceof \Prjkt\Component\Repofuck\Repofuck ?
+			$this->repository : $this;
 	}
 
 	/**
