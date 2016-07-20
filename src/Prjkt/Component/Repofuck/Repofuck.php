@@ -164,6 +164,21 @@ abstract class Repofuck
 	}
 
 	/**
+	 * Set the data and keys for the repository
+	 *
+	 * @param array $parameters
+	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 */
+	public function setDataAndKeys(array $parameters) : \Prjkt\Component\Repofuck\Repofuck
+	{
+		$keys = array_keys($parameters);
+
+		$this->setKeys($keys)->setData($parameters);
+
+		return $this;
+	}
+
+	/**
 	 * Set the data for the repository
 	 *
 	 * @param array
