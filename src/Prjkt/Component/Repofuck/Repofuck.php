@@ -323,7 +323,7 @@ abstract class Repofuck
 	}
 
 	/**
-	 * Prepares the entity
+	 * Prepares the persistence of a repository or entity
 	 *
 	 * @param array $parameters
 	 * @param \Closure $function [default=null]
@@ -350,20 +350,20 @@ abstract class Repofuck
 
 					// This will persist the repository for the next operation
 					// It also gives an advantage as the repository contained
-					// $this->setRepository($return);
+					$this->setRepository($return);
 
 				break;
 
 				case is_array($return):
 
 					// This will persist the keys and data returned
-					// $this->setDataAndKeys($return);
+					$this->setDataAndKeys($return);
 
 				break;
 
 				case 'default':
 					
-					// do nothing
+					$this->setData($parameters);
 
 				break;
 			}
@@ -371,7 +371,8 @@ abstract class Repofuck
 		}
 
 		// If there's a repository being persisted, return it, defer to self when there's none
-		return $this;
+		return is_object($this->repository) && $this->repository instanceof \Prjkt\Component\Repofuck\Repofuck ?
+			$this->repository : $this;
 	}
 
 	/**
