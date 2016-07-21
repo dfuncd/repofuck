@@ -325,25 +325,21 @@ abstract class Repofuck
 	 * @param integer|array|string $param
 	 * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection
 	 */
-	public function first($params)
+	public function first($params = [])
 	{
 		switch ($params) {
 
 			case is_numeric($params):
 
-				$entity = $this->entity->find($id);
+				$entity = $this->find($params);
 
 			break;
 
 			case is_array($params):
 
-				$entity = $this->entity->where($params)->first();
+				$params = ! count($params) > 0 ? $this->getData() : $params;
 
-			break;
-
-			case is_string($params):
-
-				$entity = $this->entity->where($params, $value)->first();
+				$entity = $this->entity->where($params)->first($this->getColumns());
 
 			break;
 
