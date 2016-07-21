@@ -295,7 +295,7 @@ abstract class Repofuck
 	 * @param integer|array|string $param
 	 * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection
 	 */
-	public function first($params, $value = null)
+	public function first($params)
 	{
 		switch ($params) {
 
