@@ -78,6 +78,13 @@ abstract class Repofuck
 	protected $keys = [];
 
 	/**
+	 * Columns to query
+	 *
+	 * @var array
+	 */
+	protected $columns = [];
+
+	/**
 	 * Class constructor
 	 *
 	 * @param \Illuminate\Container\Container $app
@@ -199,6 +206,19 @@ abstract class Repofuck
 	}
 
 	/**
+	 * Set the columns to be queried
+	 *
+	 * @param array $columns
+	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 */
+	public function setColumns(array $columns) : \Prjkt\Component\Repofuck\Repofuck
+	{
+		$this->columns = $columns;
+
+		return $this;
+	}
+
+	/**
 	 * Set the data for the repository
 	 *
 	 * @param array
@@ -222,6 +242,16 @@ abstract class Repofuck
 		$this->keys = $keys;
 
 		return $this;
+	}
+
+	/**
+	 * Get the columns
+	 *
+	 * @return array
+	 */
+	public function getColumns()
+	{
+		return $this->columns;
 	}
 
 	/**
