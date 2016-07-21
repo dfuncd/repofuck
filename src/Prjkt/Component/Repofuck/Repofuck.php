@@ -82,7 +82,7 @@ abstract class Repofuck
 	 *
 	 * @var array
 	 */
-	protected $columns = [];
+	protected $columns = ['*'];
 
 	/**
 	 * Class constructor
