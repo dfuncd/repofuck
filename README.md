@@ -4,7 +4,22 @@ Fucking with the repository design pattern
 
 ### Why?
 
-Writing the same base repository class is tiring as fuck. Better to write my own repository package to sustain my need. There is however a far more complex repository package called "[Repository](https://github.com/rinvex/repository)". The major difference between the two is that you can contain and call repositories and models magically, this feature still needs work in which in itself will make the package having a different goal.
+Repofuck is dynamically persistent repository provider that also acts as a factory in runtime. Business logic can be written in the usual way or in closures if additional operations are needed before the data is given out. This eliminates the backdrop of needing predefined repository functions and replacing it by the entities themselves. Repofuck also features a dynamic mass assignment workflow where we can leverage predefined keys from Eloquent's `getFillable` or assign our own keys to be persisted in the repository. This way, when we're about to save the entity. The data itself is already persisted and can be manipulated on the fly for additional operations.
+
+
+### Sample Usage
+```php
+$data = $repo->prepare(['foor' => 'bar'], function ($params, $repo)
+{
+	//.. operations here
+	return $repo->entity
+		->with('relationship')
+		->where($params);
+	
+})->get();
+```
+As you can see above. We are fetching data with the parameters with a relationship. The repository will be persisting the return of the callback and we can perform another operation. In which case we are performing a get.
+
 
 ### Prerequisites
 * PHP v7
