@@ -106,7 +106,7 @@ abstract class Repofuck
 	 */
 	public function loadResources() : bool
 	{
-		if ( count($this->resources) > 0 ) {
+		if ( $this->hasValues($this->resources) ) {
 			array_walk($this->resources, [$this, 'register']);
 		}
 
@@ -286,7 +286,7 @@ abstract class Repofuck
 	 */
 	public function entity(string $entity = null) : Model
 	{
-		if ( count($this->entities) > 0 && $entity === null ) {
+		if ( $this->hasValues($this->entities) && $entity === null ) {
 			$parsedName = $this->resolveRepoName();
 
 			return array_key_exists($parsedName, $this->entities) ?
@@ -340,7 +340,7 @@ abstract class Repofuck
 
 			case is_array($params):
 
-				$params = ! count($params) > 0 ? $this->getData() : $params;
+				$params = ! $this->hasValues($params) ? $this->getData() : $params;
 
 				$entity = $this->entity->where($params)->first($this->getColumns());
 
@@ -360,7 +360,7 @@ abstract class Repofuck
 	 */
 	public function prepare(array $parameters, Closure $function = null) : \Prjkt\Component\Repofuck\Repofuck
 	{
-		$parameters = ! count($parameters) > 0 ? $this->getData() : $parameters;
+		$parameters = ! $this->hasValues($parameters) ? $this->getData() : $parameters;
 
 		if ( $function instanceof Closure ) {
 
@@ -473,7 +473,7 @@ abstract class Repofuck
 	{
 		$entity = $this->entity;
 
-		if ( count($keys) > 0 ) {
+		if ( $this->hasValues($keys) ) {
 
 			foreach($inserts as $key => $val)
 			{
