@@ -104,7 +104,7 @@ abstract class Repofuck
 	 *
 	 * @return true
 	 */
-	public function loadResources() : bool
+	protected function loadResources() : bool
 	{
 		if ( $this->hasValues($this->resources) ) {
 			array_walk($this->resources, [$this, 'register']);
@@ -136,18 +136,21 @@ abstract class Repofuck
 			$instance = $this->app->make($instance);
 		}
 
-		switch($instance) {
-
+		switch($instance)
+		{
 			// Adds the entity instance to the entities property
 			case ($instance instanceof Model):
+
 				$this->entities[$instance->getTable()] = $instance;
+
 			break;
 
 			// Adds the repository instance to the repositories property
 			case ($instance instanceof Repofuck):
-				$this->repositories[$this->resolveRepoName()] = $instance;
-			break;
 
+				$this->repositories[$this->resolveRepoName()] = $instance;
+
+			break;
 		}
 
 		// If the entity property has not yet defined, set it with first configured entity
@@ -169,11 +172,15 @@ abstract class Repofuck
 		switch($entity)
 		{
 			case $entity instanceof Model || $entity instanceof Builder:
+
 				$this->entity = $entity;
+
 			break;
 				
 			case is_string($entity):
+
 				$this->entity = $this->entity($entity);
+
 			break;
 		}
 
@@ -186,7 +193,7 @@ abstract class Repofuck
 	 * @param \Prjkt\Component\Repofuck\Repofuck $repository
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	public function setRepository(\Prjkt\Component\Repofuck\Repofuck $repository) : \Prjkt\Component\Repofuck\Repofuck
+	protected function setRepository(\Prjkt\Component\Repofuck\Repofuck $repository) : \Prjkt\Component\Repofuck\Repofuck
 	{
 		$this->repository = $repository;
 
@@ -199,7 +206,7 @@ abstract class Repofuck
 	 * @param array $parameters
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	public function setDataAndKeys(array $parameters) : \Prjkt\Component\Repofuck\Repofuck
+	protected function setDataAndKeys(array $parameters) : \Prjkt\Component\Repofuck\Repofuck
 	{
 		$keys = array_keys($parameters);
 
@@ -214,7 +221,7 @@ abstract class Repofuck
 	 * @param array $columns
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	public function setColumns(array $columns) : \Prjkt\Component\Repofuck\Repofuck
+	protected function setColumns(array $columns) : \Prjkt\Component\Repofuck\Repofuck
 	{
 		$this->columns = $columns;
 
@@ -227,7 +234,7 @@ abstract class Repofuck
 	 * @param array
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	public function setData(array $data) : \Prjkt\Component\Repofuck\Repofuck
+	protected function setData(array $data) : \Prjkt\Component\Repofuck\Repofuck
 	{
 		$this->data = $data;
 
@@ -240,7 +247,7 @@ abstract class Repofuck
 	 * @param array
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	public function setKeys(array $keys) : \Prjkt\Component\Repofuck\Repofuck
+	protected function setKeys(array $keys) : \Prjkt\Component\Repofuck\Repofuck
 	{
 		$this->keys = $keys;
 
@@ -325,13 +332,13 @@ abstract class Repofuck
 	/**
 	 * Finds the first entity by the given parameters
 	 *
-	 * @param integer|array|string $param
+	 * @param integer|array
 	 * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection
 	 */
-	public function first($params = [])
+	public function first($params)
 	{
-		switch ($params) {
-
+		switch ($params)
+		{
 			case is_numeric($params):
 
 				$entity = $this->find($params);
@@ -345,7 +352,6 @@ abstract class Repofuck
 				$entity = $this->entity->where($params)->first($this->getColumns());
 
 			break;
-
 		}
 
 		return $entity;
@@ -354,49 +360,39 @@ abstract class Repofuck
 	/**
 	 * Prepares the persistence of a repository or entity
 	 *
+	 * @param \Closure $function
 	 * @param array $parameters
-	 * @param \Closure $function [default=null]
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	public function prepare(array $parameters, Closure $function = null) : \Prjkt\Component\Repofuck\Repofuck
+	public function prepare(Closure $function, array $parameters = []) : \Prjkt\Component\Repofuck\Repofuck
 	{
 		$parameters = ! $this->hasValues($parameters) ? $this->getData() : $parameters;
 
-		if ( $function instanceof Closure ) {
+		$return = call_user_func_array($function, [$parameters, $this]);
 
-			$return = call_user_func_array($function, [$parameters, $this]);
+		switch($return)
+		{
+			case $return instanceof Builder:
 
-			switch($return)
-			{
-				case $return instanceof Builder:
+				// This will persist the entity throughout the repository for the next operation
+				$this->setEntity($return);
 
-					// This will persist the entity throughout the repository for the next operation
-					$this->setEntity($return);
+			break;
 
-				break;
+			case $return instanceof \Prjkt\Component\Repofuck\Repofuck:
 
-				case $return instanceof \Prjkt\Component\Repofuck\Repofuck:
+				// This will persist the repository for the next operation
+				// It also gives an advantage as the repository contained
+				$this->setRepository($return);
 
-					// This will persist the repository for the next operation
-					// It also gives an advantage as the repository contained
-					$this->setRepository($return);
+			break;
 
-				break;
+			case is_array($return):
 
-				case is_array($return):
+				// This will persist the keys and data returned
+				$this->setDataAndKeys($return);
 
-					// This will persist the keys and data returned
-					$this->setDataAndKeys($return);
-
-				break;
-
-				case 'default':
-					
-					$this->setData($parameters);
-
-				break;
-			}
-
+			break;
 		}
 
 		// If there's a repository being persisted, return it, defer to self when there's none
@@ -493,34 +489,25 @@ abstract class Repofuck
 	}
 
 	/**
-	 * Executes the callback
-	 *
-	 * @param array $data
-	 * @param Closure $callback
-	 * @return array
-	 */
-	protected function executeCallback(Closure $callback, array $data) : array
-	{
-		return call_user_func_array($callback, [$this, $data]);
-	}
-
-	/**
 	 * Mimics the original behavior of the DI
 	 *
 	 * @return Object
 	 */
 	public function __get($key)
 	{
-		switch($key) {
-
+		switch($key)
+		{
 			case array_key_exists($key, $this->entities):
+
 				return $this->entities[$key];
+
 			break;
 
 			case array_key_exists($key, $this->repositories):
-				return $this->repositories[$key];
-			break;
 
+				return $this->repositories[$key];
+
+			break;
 		}
 
 		throw new ResourceNotFound;
