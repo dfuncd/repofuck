@@ -332,10 +332,10 @@ abstract class Repofuck
 	/**
 	 * Finds the first entity by the given parameters
 	 *
-	 * @param integer|array|string $param
+	 * @param integer|array
 	 * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection
 	 */
-	public function first($params = [])
+	public function first($params)
 	{
 		switch ($params)
 		{
