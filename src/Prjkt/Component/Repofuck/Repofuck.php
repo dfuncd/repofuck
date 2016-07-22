@@ -360,48 +360,45 @@ abstract class Repofuck
 	/**
 	 * Prepares the persistence of a repository or entity
 	 *
+	 * @param \Closure $function
 	 * @param array $parameters
-	 * @param \Closure $function [default=null]
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	public function prepare(array $parameters, Closure $function = null) : \Prjkt\Component\Repofuck\Repofuck
+	public function prepare(Closure $function, array $parameters = []) : \Prjkt\Component\Repofuck\Repofuck
 	{
 		$parameters = ! $this->hasValues($parameters) ? $this->getData() : $parameters;
 
-		if ( $function instanceof Closure ) {
+		$return = call_user_func_array($function, [$parameters, $this]);
 
-			$return = call_user_func_array($function, [$parameters, $this]);
+		switch($return)
+		{
+			case $return instanceof Builder:
 
-			switch($return)
-			{
-				case $return instanceof Builder:
+				// This will persist the entity throughout the repository for the next operation
+				$this->setEntity($return);
 
-					// This will persist the entity throughout the repository for the next operation
-					$this->setEntity($return);
+			break;
 
-				break;
+			case $return instanceof \Prjkt\Component\Repofuck\Repofuck:
 
-				case $return instanceof \Prjkt\Component\Repofuck\Repofuck:
+				// This will persist the repository for the next operation
+				// It also gives an advantage as the repository contained
+				$this->setRepository($return);
 
-					// This will persist the repository for the next operation
-					// It also gives an advantage as the repository contained
-					$this->setRepository($return);
+			break;
 
-				break;
+			case is_array($return):
 
-				case is_array($return):
+				// This will persist the keys and data returned
+				$this->setDataAndKeys($return);
 
-					// This will persist the keys and data returned
-					$this->setDataAndKeys($return);
+			break;
 
-				break;
-
-				case 'default':
+			case 'default':
 					
-					$this->setData($parameters);
+				$this->setData($parameters);
 
-				break;
-			}
+			break;
 
 		}
 
