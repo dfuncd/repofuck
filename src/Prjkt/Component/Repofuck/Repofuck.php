@@ -104,7 +104,7 @@ abstract class Repofuck
 	 *
 	 * @return true
 	 */
-	public function loadResources() : bool
+	protected function loadResources() : bool
 	{
 		if ( $this->hasValues($this->resources) ) {
 			array_walk($this->resources, [$this, 'register']);
@@ -186,7 +186,7 @@ abstract class Repofuck
 	 * @param \Prjkt\Component\Repofuck\Repofuck $repository
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	public function setRepository(\Prjkt\Component\Repofuck\Repofuck $repository) : \Prjkt\Component\Repofuck\Repofuck
+	protected function setRepository(\Prjkt\Component\Repofuck\Repofuck $repository) : \Prjkt\Component\Repofuck\Repofuck
 	{
 		$this->repository = $repository;
 
@@ -199,7 +199,7 @@ abstract class Repofuck
 	 * @param array $parameters
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	public function setDataAndKeys(array $parameters) : \Prjkt\Component\Repofuck\Repofuck
+	protected function setDataAndKeys(array $parameters) : \Prjkt\Component\Repofuck\Repofuck
 	{
 		$keys = array_keys($parameters);
 
@@ -214,7 +214,7 @@ abstract class Repofuck
 	 * @param array $columns
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	public function setColumns(array $columns) : \Prjkt\Component\Repofuck\Repofuck
+	protected function setColumns(array $columns) : \Prjkt\Component\Repofuck\Repofuck
 	{
 		$this->columns = $columns;
 
@@ -227,7 +227,7 @@ abstract class Repofuck
 	 * @param array
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	public function setData(array $data) : \Prjkt\Component\Repofuck\Repofuck
+	protected function setData(array $data) : \Prjkt\Component\Repofuck\Repofuck
 	{
 		$this->data = $data;
 
@@ -240,7 +240,7 @@ abstract class Repofuck
 	 * @param array
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	public function setKeys(array $keys) : \Prjkt\Component\Repofuck\Repofuck
+	protected function setKeys(array $keys) : \Prjkt\Component\Repofuck\Repofuck
 	{
 		$this->keys = $keys;
 
