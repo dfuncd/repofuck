@@ -136,18 +136,21 @@ abstract class Repofuck
 			$instance = $this->app->make($instance);
 		}
 
-		switch($instance) {
-
+		switch($instance)
+		{
 			// Adds the entity instance to the entities property
 			case ($instance instanceof Model):
+
 				$this->entities[$instance->getTable()] = $instance;
+
 			break;
 
 			// Adds the repository instance to the repositories property
 			case ($instance instanceof Repofuck):
-				$this->repositories[$this->resolveRepoName()] = $instance;
-			break;
 
+				$this->repositories[$this->resolveRepoName()] = $instance;
+
+			break;
 		}
 
 		// If the entity property has not yet defined, set it with first configured entity
@@ -169,11 +172,15 @@ abstract class Repofuck
 		switch($entity)
 		{
 			case $entity instanceof Model || $entity instanceof Builder:
+
 				$this->entity = $entity;
+
 			break;
 				
 			case is_string($entity):
+
 				$this->entity = $this->entity($entity);
+
 			break;
 		}
 
@@ -330,8 +337,8 @@ abstract class Repofuck
 	 */
 	public function first($params = [])
 	{
-		switch ($params) {
-
+		switch ($params)
+		{
 			case is_numeric($params):
 
 				$entity = $this->find($params);
@@ -345,7 +352,6 @@ abstract class Repofuck
 				$entity = $this->entity->where($params)->first($this->getColumns());
 
 			break;
-
 		}
 
 		return $entity;
@@ -499,16 +505,19 @@ abstract class Repofuck
 	 */
 	public function __get($key)
 	{
-		switch($key) {
-
+		switch($key)
+		{
 			case array_key_exists($key, $this->entities):
+
 				return $this->entities[$key];
+
 			break;
 
 			case array_key_exists($key, $this->repositories):
-				return $this->repositories[$key];
-			break;
 
+				return $this->repositories[$key];
+
+			break;
 		}
 
 		throw new ResourceNotFound;
