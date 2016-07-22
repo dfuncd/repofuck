@@ -393,13 +393,6 @@ abstract class Repofuck
 				$this->setDataAndKeys($return);
 
 			break;
-
-			case 'default':
-					
-				$this->setData($parameters);
-
-			break;
-
 		}
 
 		// If there's a repository being persisted, return it, defer to self when there's none
