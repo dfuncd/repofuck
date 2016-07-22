@@ -493,18 +493,6 @@ abstract class Repofuck
 	}
 
 	/**
-	 * Executes the callback
-	 *
-	 * @param array $data
-	 * @param Closure $callback
-	 * @return array
-	 */
-	protected function executeCallback(Closure $callback, array $data) : array
-	{
-		return call_user_func_array($callback, [$this, $data]);
-	}
-
-	/**
 	 * Mimics the original behavior of the DI
 	 *
 	 * @return Object
