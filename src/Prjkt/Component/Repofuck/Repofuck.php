@@ -332,10 +332,11 @@ abstract class Repofuck
 	/**
 	 * Finds the first entity by the given parameters
 	 *
-	 * @param integer|array
+	 * @param integer|array|string
+	 * @param string
 	 * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection
 	 */
-	public function first($params)
+	public function first($params, $value = null)
 	{
 		switch ($params)
 		{
@@ -350,6 +351,12 @@ abstract class Repofuck
 				$params = ! $this->hasValues($params) ? $this->getData() : $params;
 
 				$entity = $this->entity->where($params)->first($this->getColumns());
+
+			break;
+
+			case is_string($params) && is_string($value):
+
+				$entity = $this->entity->where($params, $value)->first();
 
 			break;
 		}
