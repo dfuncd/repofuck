@@ -9,14 +9,18 @@ Repofuck is dynamically persistent repository provider that also acts as a facto
 
 ### Sample Usage
 ```php
-$data = $repo->prepare(['foor' => 'bar'], function ($params, $repo)
+$data = $repo->prepare(['foor' => 'bar'], function ($r, $q)
 {
 	//.. operations here
-	return $repo->entity
+	return $r->entity
 		->with('relationship')
-		->where($params);
+		->where($q['where']);
 	
-})->get();
+}, [
+	'where' => [
+		['foo', 'LIKE', '%BAR%']
+	]
+])->get();
 ```
 As you can see above. We are fetching data with the parameters with a relationship. The repository will be persisting the return of the callback and we can perform another operation. In which case we are performing a get.
 
