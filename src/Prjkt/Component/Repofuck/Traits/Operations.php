@@ -16,6 +16,17 @@ trait Operations
 	}
 
 	/**
+	 * Checks if the value given is an instance of Eloquent
+	 *
+	 * @param mixed
+	 * @return bool
+	 */
+	public function isEloquent($value) : bool
+	{
+		return is_object($value) && $value instanceof \Illuminate\Database\Eloquent\Model ? true : false;
+	}
+
+	/**
 	 * Checks if the value given is an instance of Repofuck
 	 *
 	 * @param mixed
