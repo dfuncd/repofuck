@@ -7,10 +7,15 @@ use Illuminate\Database\Eloquent\{
 	Builder
 };
 
-use Prjkt\Component\Repofuck\Exceptions\ResourceNotFound;
+use Prjkt\Component\Repofuck\{
+	Exceptions\ResourceNotFound,
+	Traits\Operations
+};
 
 class Entities
 {
+	use Operations;
+	
 	/**
 	 * Entity pointer
 	 *
@@ -33,6 +38,22 @@ class Entities
 	public function current()
 	{
 		return $this->entity;
+	}
+
+	/**
+	 * Checks the entities container if an entity exists
+	 * ~ defer to first configured if none provided
+	 *
+	 * @param string $entity
+	 * @return bool
+	 */
+	public function has(string $entity = null) : bool
+	{
+		if ( is_null($entity) ) {
+			return $this->isEloquent($this->entity) ? true : false;
+		}
+
+		return array_key_exists($entity, $this->entities) ? true : false;
 	}
 
 	/**
