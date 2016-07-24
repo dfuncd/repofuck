@@ -11,6 +11,11 @@ use Illuminate\Database\Eloquent\{
 	Builder
 };
 
+use Containers\{
+	Entities,
+	Repositories
+};
+
 use Exceptions\{
 	EntityNotDefined,
 	ResourceNotFound,
@@ -32,32 +37,18 @@ abstract class Repofuck
 	protected $app;
 
 	/**
-	 * The current entity pointer
-	 *
-	 * @var object
-	 */
-	protected $entity;
-
-	/**
 	 * Entities container
 	 *
-	 * @var array
+	 * @var \Prjkt\Component\Repofuck\Containers\Entities
 	 */
-	protected $entities = [];
-
-	/**
-	 * A repository pointer
-	 *
-	 * @var \Prjkt\Component\Repofuck\Repofuck
-	 */
-	protected $repository;
+	protected $entities;
 
 	/**
 	 * Repositories container
 	 *
-	 * @var array
+	 * @var \Prjkt\Component\Repofuck\Containers\Repositories
 	 */
-	protected $repositories = [];
+	protected $repositories;
 
 	/**
 	 * Resources
@@ -96,31 +87,30 @@ abstract class Repofuck
 	{
 		$this->app = $app;
 
+		$this->loadContainers();
+
 		$this->loadResources();
+	}
+
+	/**
+	 * Loads the entities and repositories containers
+	 *
+	 */
+	public function loadContainers()
+	{
+		$this->entities = new Entities;
+		$this->repositories = new Repositories;
 	}
 
 	/**
 	 * Loads all resources for the repository to use
 	 *
-	 * @return true
 	 */
 	protected function loadResources() : bool
 	{
 		if ( $this->hasValues($this->resources) ) {
 			array_walk($this->resources, [$this, 'register']);
 		}
-
-		return true;
-	}
-
-	/**
-	 * Resolves the name of the repository
-	 *
-	 * @return string
-	 */
-	protected function resolveRepoName()
-	{
-		return strtolower(str_replace('Repository', '', (new \ReflectionClass($this))->getShortName()));
 	}
 
 	/**
@@ -141,63 +131,24 @@ abstract class Repofuck
 			// Adds the entity instance to the entities property
 			case ($instance instanceof Model):
 
-				$this->entities[$instance->getTable()] = $instance;
+				$this->entities->push($instance);
 
 			break;
 
 			// Adds the repository instance to the repositories property
 			case ($instance instanceof Repofuck):
 
-				$this->repositories[$this->resolveRepoName()] = $instance;
+				$this->repositories->push($instance);
 
 			break;
 		}
 
 		// If the entity property has not yet defined, set it with first configured entity
-		if ( ! is_object($this->entity) ) {
-			$this->setEntity($this->entity());
+		if ( ! is_object($this->entities->has() ) ) {
+			$this->entities->set($this->entities->resolve());
 		}
 
 		return true;
-	}
-
-	/**
-	 * Sets the current entity
-	 *
-	 * @param string $entity
-	 * @return \Prjkt\Component\Repofuck\Repofuck
-	 */
-	protected function setEntity($entity) : \Prjkt\Component\Repofuck\Repofuck
-	{
-		switch($entity)
-		{
-			case $entity instanceof Model || $entity instanceof Builder:
-
-				$this->entity = $entity;
-
-			break;
-				
-			case is_string($entity):
-
-				$this->entity = $this->entity($entity);
-
-			break;
-		}
-
-		return $this;
-	}
-
-	/**
-	 * Sets a repository pointer
-	 *
-	 * @param \Prjkt\Component\Repofuck\Repofuck $repository
-	 * @return \Prjkt\Component\Repofuck\Repofuck
-	 */
-	protected function setRepository(\Prjkt\Component\Repofuck\Repofuck $repository) : \Prjkt\Component\Repofuck\Repofuck
-	{
-		$this->repository = $repository;
-
-		return $this;
 	}
 
 	/**
@@ -285,40 +236,6 @@ abstract class Repofuck
 	}
 
 	/**
-	 * Returns the {first configured|inputted} entity
-	 *
-	 * @param string $entity
-	 * @throws \Prjkt\Component\Repofuck\Exceptions\EntityNotDefined
-	 * @return \Illuminate\Database\Eloquent\Model
-	 */
-	public function entity(string $entity = null) : Model
-	{
-		if ( $this->hasValues($this->entities) && $entity === null ) {
-			$parsedName = $this->resolveRepoName();
-
-			return array_key_exists($parsedName, $this->entities) ?
-				$this->entities[$parsedName]:
-				array_values($this->entities)[0];
-		}
-
-		if ( array_key_exists($entity, $this->entities) ) {
-			return $this->entity = $this->entities[$entity];
-		}
-
-		throw new Exceptions\EntityNotDefined;
-	}
-
-	/**
-	 * Returns the persisted repository
-	 *
-	 * @return \Prjkt\Component\Repofuck\Repofuck
-	 */
-	public function repository() : \Prjkt\Component\Repofuck\Repofuck
-	{
-		return $this->repository;
-	}
-
-	/**
 	 * Finds an entity by its ID
 	 *
 	 * @param string $id
@@ -326,7 +243,7 @@ abstract class Repofuck
 	 */
 	public function find($id) : Model
 	{
-		return $this->entity->find($id);
+		return $this->entities->current()->find($id);
 	}
 
 	/**
@@ -350,13 +267,13 @@ abstract class Repofuck
 
 				$params = ! $this->hasValues($params) ? $this->getData() : $params;
 
-				$entity = $this->entity->where($params)->first($this->getColumns());
+				$entity = $this->entities->current()->where($params)->first($this->getColumns());
 
 			break;
 
 			case is_string($params) && is_string($value):
 
-				$entity = $this->entity->where($params, $value)->first();
+				$entity = $this->entities->current()->where($params, $value)->first();
 
 			break;
 		}
@@ -382,7 +299,7 @@ abstract class Repofuck
 			case $return instanceof Builder:
 
 				// This will persist the entity throughout the repository for the next operation
-				$this->setEntity($return);
+				$this->entities->set($return);
 
 			break;
 
@@ -390,7 +307,7 @@ abstract class Repofuck
 
 				// This will persist the repository for the next operation
 				// It also gives an advantage as the repository contained
-				$this->setRepository($return);
+				$this->repositories->set($return);
 
 			break;
 
@@ -403,8 +320,8 @@ abstract class Repofuck
 		}
 
 		// If there's a repository being persisted, return it, defer to self when there's none
-		return is_object($this->repository) && $this->repository instanceof \Prjkt\Component\Repofuck\Repofuck ?
-			$this->repository : $this;
+		return $this->isRepofuck($this->repositories->current()) ?
+			$this->repositories->resolve() : $this;
 	}
 
 	/**
@@ -414,7 +331,7 @@ abstract class Repofuck
 	 */
 	public function get() : Collection
 	{
-		return $this->entity->get();
+		return $this->entities->current()->get();
 	}
 
 	/**
@@ -438,8 +355,7 @@ abstract class Repofuck
 	 */
 	public function update($identifier) : Model
 	{
-		$entity = $this->entity->first($identifier);
-		$entity = $this->map($this->getData(), $this->getkeys());
+		$entity = $this->map($this->getData(), $this->getkeys(), $this->entities->current()->first($identifier));
 		$entity->save();
 
 		return $entity;
@@ -453,7 +369,7 @@ abstract class Repofuck
 	 */
 	public function delete($identifier) : bool
 	{
-		$entity = $this->entity->first($identifier);
+		$entity = $this->entities->current()->first($identifier);
 
 		if ( is_null($entity) ) {
 			return false;
@@ -469,12 +385,13 @@ abstract class Repofuck
 	 *
 	 * @param array $inserts
 	 * @param array $keys
+	 * @param \Illuminate\Database\Eloquent\Model $entity
 	 * @throws \Prjkt\Component\Repofuck\Exceptions\EntityNotDefined
 	 * @return \Illuminate\Database\Eloquent\Model
 	 */
-	protected function map(array $inserts, array $keys = []) : Model
+	protected function map(array $inserts, array $keys = [], Model $entity = null) : Model
 	{
-		$entity = $this->entity;
+		$entity = ! is_null($entity) ? $this->entities->current() : $entity;
 
 		if ( $this->hasValues($keys) ) {
 
@@ -493,31 +410,6 @@ abstract class Repofuck
 		$entity = $entity->fill($inserts);
 
 		return $entity;
-	}
-
-	/**
-	 * Mimics the original behavior of the DI
-	 *
-	 * @return Object
-	 */
-	public function __get($key)
-	{
-		switch($key)
-		{
-			case array_key_exists($key, $this->entities):
-
-				return $this->entities[$key];
-
-			break;
-
-			case array_key_exists($key, $this->repositories):
-
-				return $this->repositories[$key];
-
-			break;
-		}
-
-		throw new ResourceNotFound;
 	}
 
 }
