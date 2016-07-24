@@ -37,6 +37,22 @@ class Repositories
 	}
 
 	/**
+	 * Checks the repositories container if a repository exists
+	 * ~ defer to first configured if none provided
+	 *
+	 * @param string $repository
+	 * @return bool
+	 */
+	public function has(string $repository = null) : bool
+	{
+		if ( is_null($repository) ) {
+			return $this->isRepofuck($this->repository) ? true : false;
+		}
+
+		return array_key_exists($repository, $this->repositories) ? true : false;
+	}
+
+	/**
 	 * Pushes the repository to the container
 	 *
 	 * @param \Prjkt\Component\Repofuck\Repofuck $repository
