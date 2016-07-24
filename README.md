@@ -9,7 +9,7 @@ Repofuck is dynamically persistent repository provider that also acts as a facto
 
 ### Sample Usage
 ```php
-$data = $repo->prepare(['foor' => 'bar'], function ($r, $q)
+$data = $repo->prepare(function ($r, $q)
 {
 	//.. operations here
 	return $r->entity
