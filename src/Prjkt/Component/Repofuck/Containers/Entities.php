@@ -73,16 +73,17 @@ class Entities
 	 * Resolves the entity given by its table name or the first one configured
 	 *
 	 * @param string $entity
+	 * @param \Prjkt\Component\Repofuck\Repofuck
 	 * @throws \Prjkt\Component\Repofuck\Exceptions\EntityNotDefined
 	 * @return \Illuminate\Database\Eloquent\Model
 	 */
-	public function resolve(string $entity = null) : Model
+	public function resolve(string $entity = null, string $repoName = null) : Model
 	{
-		switch($entities)
+		switch($entity)
 		{
-			case ($this->hasValues($this->entities) && $entity === null):
-				return array_key_exists($parsedName, $this->entities) ?
-					$this->entities[$this->resolveRepoName()] : array_values($this->entities)[0];
+			case null && $this->hasValues($this->entities):
+				return array_key_exists($repoName, $this->entities) ?
+					$this->entities[$repoName] : array_values($this->entities)[0];
 			break;
 
 			case array_key_exists($entity, $this->entities):
