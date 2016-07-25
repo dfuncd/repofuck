@@ -11,11 +11,6 @@ use Illuminate\Database\Eloquent\{
 	Builder
 };
 
-use Containers\{
-	Entities,
-	Repositories
-};
-
 use Exceptions\{
 	EntityNotDefined,
 	ResourceNotFound,
@@ -39,14 +34,14 @@ abstract class Repofuck
 	 *
 	 * @var \Prjkt\Component\Repofuck\Containers\Entities
 	 */
-	protected $entities;
+	public $entities;
 
 	/**
 	 * Repositories container
 	 *
 	 * @var \Prjkt\Component\Repofuck\Containers\Repositories
 	 */
-	protected $repositories;
+	public $repositories;
 
 	/**
 	 * Resources
@@ -96,15 +91,15 @@ abstract class Repofuck
 	 */
 	public function loadContainers()
 	{
-		$this->entities = new Entities;
-		$this->repositories = new Repositories;
+		$this->entities = new \Prjkt\Component\Repofuck\Containers\Entities;
+		$this->repositories = new \Prjkt\Component\Repofuck\Containers\Repositories;
 	}
 
 	/**
 	 * Loads all resources for the repository to use
 	 *
 	 */
-	protected function loadResources() : bool
+	protected function loadResources()
 	{
 		if ( $this->hasValues($this->resources) ) {
 			array_walk($this->resources, [$this, 'register']);
@@ -142,8 +137,8 @@ abstract class Repofuck
 		}
 
 		// If the entity property has not yet defined, set it with first configured entity
-		if ( ! is_object($this->entities->has() ) ) {
-			$this->entities->set($this->entities->resolve());
+		if ( ! is_object($this->entities->has()) ) {
+			$this->entities->set($this->entities->resolve(null, $this->resolveRepoName($this)));
 		}
 
 		return true;
@@ -290,7 +285,7 @@ abstract class Repofuck
 	{
 		$parameters = ! $this->hasValues($parameters) ? $this->getData() : $parameters;
 
-		$return = call_user_func_array($function, [$parameters, $this]);
+		$return = call_user_func_array($function, [$this, $parameters]);
 
 		switch($return)
 		{
@@ -318,7 +313,7 @@ abstract class Repofuck
 		}
 
 		// If there's a repository being persisted, return it, defer to self when there's none
-		return $this->isRepofuck($this->repositories->current()) ?
+		return $this->isRepofuck($this->repositories->has()) ?
 			$this->repositories->resolve() : $this;
 	}
 
