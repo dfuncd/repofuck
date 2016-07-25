@@ -1,6 +1,6 @@
 <?php
 
-namespace Prjkt\Component\Repofuck\Containers\Repositories;
+namespace Prjkt\Component\Repofuck\Containers;
 
 
 use Prjkt\Component\Repofuck\{
@@ -10,7 +10,7 @@ use Prjkt\Component\Repofuck\{
 
 class Repositories
 {
-	use Operations;
+	use \Prjkt\Component\Repofuck\Traits\Operations;
 
 	/**
 	 * Repository pointer

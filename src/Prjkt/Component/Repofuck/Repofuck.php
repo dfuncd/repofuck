@@ -23,11 +23,9 @@ use Exceptions\{
 	InvalidCallbackReturn
 };
 
-use Traits\Operations;
-
 abstract class Repofuck
 {
-	use Operations;
+	use Traits\Operations;
 
 	/**
 	 * Laravel's App instance
