@@ -1,6 +1,6 @@
 <?php
 
-namespace Prjkt\Component\Repofuck\Repofuck\Containers;
+namespace Prjkt\Component\Repofuck\Containers;
 
 use Illuminate\Database\Eloquent\{
 	Model,
@@ -14,7 +14,7 @@ use Prjkt\Component\Repofuck\{
 
 class Entities
 {
-	use Operations;
+	use \Prjkt\Component\Repofuck\Traits\Operations;
 	
 	/**
 	 * Entity pointer

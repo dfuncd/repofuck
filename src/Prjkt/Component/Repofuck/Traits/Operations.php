@@ -1,6 +1,6 @@
 <?php
 
-namespace Prjkt\Component\Repofuck\Repofuck\Traits;
+namespace Prjkt\Component\Repofuck\Traits;
 
 trait Operations
 {
