@@ -62,9 +62,11 @@ class Entities
 	 * @param \Illuminate\Database\Eloquent\Model
 	 * @return \Prjkt\Component\Repofuck\Containers\Entities
 	 */
-	public function push(Model $entity)
+	public function push(Model $entity, string $name = null)
 	{
-		$this->entities[$entity->getTable()] = $entity;
+		$name = is_null($name) ? $entity->getTable() : $name;
+
+		$this->entities[$name] = $entity;
 
 		return $this;
 	}
