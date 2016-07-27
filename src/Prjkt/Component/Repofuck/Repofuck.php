@@ -83,9 +83,9 @@ abstract class Repofuck
 	 *
 	 * @param \Illuminate\Container\Container $app
 	 */
-	public function __construct(Container $app)
+	public function __construct(Container $app = null)
 	{
-		$this->app = $app;
+		$this->app = is_null($app) ? new Container : $app;
 
 		$this->loadContainers();
 
