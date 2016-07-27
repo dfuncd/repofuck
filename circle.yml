@@ -4,4 +4,4 @@ machine:
 
 test:
   override:
-    - vendor/bin/phplint
+    - vendor/bin/phplint --configuration .phplint.yml
