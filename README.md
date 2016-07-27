@@ -12,7 +12,7 @@ Repofuck is dynamically persistent repository provider that also acts as a facto
 $data = $repo->prepare(function ($r, $q)
 {
 	//.. operations here
-	return $r->entity
+	return $r->entities->current()
 		->with('relationship')
 		->where($q['where']);
 	
