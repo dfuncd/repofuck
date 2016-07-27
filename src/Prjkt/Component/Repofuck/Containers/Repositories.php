@@ -87,7 +87,7 @@ class Repositories
 	 * @param \Prjkt\Component\Repofuck\Repofuck $repository
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	protected function set(\Prjkt\Component\Repofuck\Repofuck $repository) : \Prjkt\Component\Repofuck\Containers\Repositories
+	public function set(\Prjkt\Component\Repofuck\Repofuck $repository) : \Prjkt\Component\Repofuck\Containers\Repositories
 	{
 		$this->repository = $repository;
 
