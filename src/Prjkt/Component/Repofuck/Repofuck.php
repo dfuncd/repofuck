@@ -388,7 +388,7 @@ abstract class Repofuck
 	 */
 	protected function map(array $inserts, array $keys = [], Model $entity = null) : Model
 	{
-		$entity = ! is_null($entity) ? $this->entities->current() : $entity;
+		$entity = ! is_null($entity) ? $entity : $this->entities->current();
 
 		if ( $this->hasValues($keys) ) {
 
