@@ -30,6 +30,13 @@ abstract class Repofuck
 	protected $app;
 
 	/**
+	 * The current persisted entity
+	 *
+	 * @var \Illuminate\Database\Eloquent\Model
+	 */
+	public $entity;
+
+	/**
 	 * Entities container
 	 *
 	 * @var \Prjkt\Component\Repofuck\Containers\Entities
@@ -139,6 +146,7 @@ abstract class Repofuck
 		// If the entity property has not yet defined, set it with first configured entity
 		if ( ! is_object($this->entities->has()) ) {
 			$this->entities->set($this->entities->resolve(null, $this->resolveRepoName($this)));
+			$this->entity = $this->entities->current();
 		}
 
 		return true;
