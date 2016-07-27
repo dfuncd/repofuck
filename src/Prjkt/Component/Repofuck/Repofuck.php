@@ -150,7 +150,7 @@ abstract class Repofuck
 	 * @param array $parameters
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	protected function setDataAndKeys(array $parameters) : \Prjkt\Component\Repofuck\Repofuck
+	public function setDataAndKeys(array $parameters) : \Prjkt\Component\Repofuck\Repofuck
 	{
 		$keys = array_keys($parameters);
 
@@ -165,7 +165,7 @@ abstract class Repofuck
 	 * @param array $columns
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	protected function setColumns(array $columns) : \Prjkt\Component\Repofuck\Repofuck
+	public function setColumns(array $columns) : \Prjkt\Component\Repofuck\Repofuck
 	{
 		$this->columns = $columns;
 
@@ -178,7 +178,7 @@ abstract class Repofuck
 	 * @param array
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	protected function setData(array $data) : \Prjkt\Component\Repofuck\Repofuck
+	public function setData(array $data) : \Prjkt\Component\Repofuck\Repofuck
 	{
 		$this->data = $data;
 
@@ -191,7 +191,7 @@ abstract class Repofuck
 	 * @param array
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	protected function setKeys(array $keys) : \Prjkt\Component\Repofuck\Repofuck
+	public function setKeys(array $keys) : \Prjkt\Component\Repofuck\Repofuck
 	{
 		$this->keys = $keys;
 
@@ -265,7 +265,8 @@ abstract class Repofuck
 
 				break;
 
-				case is_string($params) && is_string($value):
+				case is_string($params) && ! is_null($value):
+
 
 					$entity = $this->entities->current()->where($params, $value)->firstOrFail();
 
@@ -388,7 +389,7 @@ abstract class Repofuck
 	 */
 	protected function map(array $inserts, array $keys = [], Model $entity = null) : Model
 	{
-		$entity = ! is_null($entity) ? $this->entities->current() : $entity;
+		$entity = is_null($entity) ? $this->entities->current() : $entity;
 
 		if ( $this->hasValues($keys) ) {
 
