@@ -1,5 +1,7 @@
 # Repofuck
 
+[![CircleCI](https://circleci.com/gh/prjkt/repofuck.svg?style=svg)](https://circleci.com/gh/prjkt/repofuck)
+
 Fucking with the repository design pattern
 
 ### Why?
