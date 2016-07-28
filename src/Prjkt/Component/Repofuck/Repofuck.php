@@ -305,7 +305,7 @@ abstract class Repofuck
 			case $return instanceof Builder or $return instanceof Model:
 
 				// This will persist the entity throughout the repository for the next operation
-				$this->entities->set($return);
+				$this->entity = ($this->entities->set($return))->current();
 
 			break;
 
