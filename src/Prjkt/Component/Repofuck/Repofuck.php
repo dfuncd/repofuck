@@ -302,7 +302,7 @@ abstract class Repofuck
 
 		switch($return)
 		{
-			case $return instanceof Builder:
+			case $return instanceof Builder or $return instanceof Model:
 
 				// This will persist the entity throughout the repository for the next operation
 				$this->entities->set($return);
