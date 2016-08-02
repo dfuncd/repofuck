@@ -261,7 +261,7 @@ abstract class Repofuck
 			{
 				case is_numeric($params):
 
-					$entity = $this->findOrFail($params);
+					$entity = $this->entities->current()->findOrFail($params);
 
 				break;
 
