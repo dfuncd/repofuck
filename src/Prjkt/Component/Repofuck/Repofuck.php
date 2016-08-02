@@ -302,10 +302,10 @@ abstract class Repofuck
 
 		switch($return)
 		{
-			case $return instanceof Builder:
+			case $return instanceof Builder or $return instanceof Model:
 
 				// This will persist the entity throughout the repository for the next operation
-				$this->entities->set($return);
+				$this->entity = ($this->entities->set($return))->current();
 
 			break;
 
@@ -356,10 +356,9 @@ abstract class Repofuck
 	/**
 	 * Updates the entity
 	 *
-	 * @param integer|array $identifier
 	 * @return \Illuminate\Database\Eloquent\Model $entity
 	 */
-	public function update($identifier) : Model
+	public function update() : Model
 	{
 		$entity = $this->map($this->getData(), $this->getkeys(), $this->entities->current()->first($identifier));
 		$entity->save();
@@ -370,10 +369,9 @@ abstract class Repofuck
 	/**
 	 * Deletes the entity
 	 *
-	 * @param integer|array $identifier
 	 * @return boolean
 	 */
-	public function delete($identifier) : bool
+	public function delete() : bool
 	{
 		$entity = $this->entities->current()->first($identifier);
 
