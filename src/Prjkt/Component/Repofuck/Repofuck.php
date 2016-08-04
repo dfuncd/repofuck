@@ -360,7 +360,7 @@ abstract class Repofuck
 	 */
 	public function update($identifier) : Model
 	{
-		$entity = $this->map($this->getData(), $this->getkeys(), $this->entities->current()->first($identifier));
+		$entity = $this->map($this->getData(), $this->getkeys(), $this->first($identifier));
 		$entity->save();
 
 		return $entity;
@@ -373,7 +373,7 @@ abstract class Repofuck
 	 */
 	public function delete($identifier) : bool
 	{
-		$entity = $this->entities->current()->first($identifier);
+		$entity = $this->first($identifier);
 
 		if ( is_null($entity) ) {
 			return false;
