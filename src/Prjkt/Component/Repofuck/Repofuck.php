@@ -358,9 +358,9 @@ abstract class Repofuck
 	 *
 	 * @return \Illuminate\Database\Eloquent\Model $entity
 	 */
-	public function update() : Model
+	public function update($identifier) : Model
 	{
-		$entity = $this->map($this->getData(), $this->getkeys(), $this->entities->current()->first($identifier));
+		$entity = $this->map($this->getData(), $this->getkeys(), $this->first($identifier));
 		$entity->save();
 
 		return $entity;
@@ -371,9 +371,9 @@ abstract class Repofuck
 	 *
 	 * @return boolean
 	 */
-	public function delete() : bool
+	public function delete($identifier) : bool
 	{
-		$entity = $this->entities->current()->first($identifier);
+		$entity = $this->first($identifier);
 
 		if ( is_null($entity) ) {
 			return false;
