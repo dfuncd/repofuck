@@ -129,14 +129,14 @@ abstract class Repofuck
 		switch($instance)
 		{
 			// Adds the entity instance to the entities property
-			case ($instance instanceof Model):
+			case ( $instance instanceof Model ):
 
 				$this->entities->push($instance);
 
 			break;
 
 			// Adds the repository instance to the repositories property
-			case ($instance instanceof Repofuck):
+			case ( $instance instanceof Repofuck ):
 
 				$this->repositories->push($instance);
 
@@ -211,7 +211,7 @@ abstract class Repofuck
 	 *
 	 * @return array
 	 */
-	public function getColumns()
+	public function getColumns() : array
 	{
 		return $this->columns;
 	}
@@ -259,13 +259,13 @@ abstract class Repofuck
 		try {
 			switch ($params)
 			{
-				case is_numeric($params):
+				case ( is_numeric($params) ):
 
 					$entity = $this->entities->current()->findOrFail($params);
 
 				break;
 
-				case is_array($params):
+				case ( is_array($params) ):
 
 					$params = ! $this->hasValues($params) ? $this->getData() : $params;
 
@@ -273,8 +273,7 @@ abstract class Repofuck
 
 				break;
 
-				case is_string($params) && ! is_null($value):
-
+				case ( is_string($params) && ! is_null($value) ):
 
 					$entity = $this->entities->current()->where($params, $value)->firstOrFail();
 
@@ -302,14 +301,14 @@ abstract class Repofuck
 
 		switch($return)
 		{
-			case $return instanceof Builder or $return instanceof Model:
+			case ( $return instanceof Builder or $return instanceof Model ):
 
 				// This will persist the entity throughout the repository for the next operation
 				$this->entity = ($this->entities->set($return))->current();
 
 			break;
 
-			case $return instanceof \Prjkt\Component\Repofuck\Repofuck:
+			case ( $return instanceof \Prjkt\Component\Repofuck\Repofuck ):
 
 				// This will persist the repository for the next operation
 				// It also gives an advantage as the repository contained
@@ -317,7 +316,7 @@ abstract class Repofuck
 
 			break;
 
-			case is_array($return):
+			case ( is_array($return) ):
 
 				// This will persist the keys and data returned
 				$this->setDataAndKeys($return);
