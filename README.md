@@ -15,12 +15,12 @@ $where = [
 	['foo', 'LIKE', '%BAR%']
 ];
 
-$data = $repo->prepare(function ($r, $q) use ($where)
+$data = $repo->prepare(function ($r) use ($where)
 {
 	//.. operations here
 	return $r->entity
 		->with('relationship')
-		->where($q['where']);
+		->where($where);
 	
 })->get();
 ```
