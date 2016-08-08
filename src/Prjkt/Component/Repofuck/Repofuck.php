@@ -301,6 +301,12 @@ abstract class Repofuck
 
 		switch($return)
 		{
+			case null:
+
+				return $this;
+
+			break;
+			
 			case ( $return instanceof Builder or $return instanceof Model ):
 
 				// This will persist the entity throughout the repository for the next operation
@@ -322,12 +328,6 @@ abstract class Repofuck
 
 				// This will persist the keys and data returned
 				$this->setDataAndKeys($return);
-
-			break;
-
-			default:
-
-				return $this;
 
 			break;
 		}
