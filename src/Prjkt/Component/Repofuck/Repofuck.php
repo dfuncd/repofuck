@@ -314,6 +314,8 @@ abstract class Repofuck
 				// It also gives an advantage as the repository contained
 				$this->repositories->set($return);
 
+				return $this->repositories->resolve();
+
 			break;
 
 			case ( is_array($return) ):
@@ -322,11 +324,16 @@ abstract class Repofuck
 				$this->setDataAndKeys($return);
 
 			break;
+
+			default:
+
+				return $this;
+
+			break;
 		}
 
 		// If there's a repository being persisted, return it, defer to self when there's none
-		return $this->isRepofuck($this->repositories->has()) ?
-			$this->repositories->resolve() : $this;
+		return $this;
 	}
 
 	/**
