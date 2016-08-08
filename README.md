@@ -26,6 +26,9 @@ $data = $repo->prepare(function ($r) use ($where)
 ```
 As you can see above. We are fetching data with the parameters with a relationship. The repository will be persisting the return of the callback and we can perform another operation. In which case we are performing a get.
 
+### Installing
+`composer require prjkt/repofuck`
+
 
 ### Prerequisites
 * PHP v7
