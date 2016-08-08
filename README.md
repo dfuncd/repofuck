@@ -18,7 +18,7 @@ $where = [
 $data = $repo->prepare(function ($r) use ($where)
 {
 	//.. operations here
-	return $r->entity
+	$r->entity
 		->with('relationship')
 		->where($where);
 	
