@@ -422,4 +422,15 @@ abstract class Repofuck
 		return $entity;
 	}
 
+	/**
+     * Dynamically access container services.
+     *
+     * @param  string  $key
+     * @return mixed
+     */
+	public function __get($key)
+	{
+		return $this->app->{$key};
+	}
+
 }
