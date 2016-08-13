@@ -314,7 +314,7 @@ abstract class Repofuck
 
 			break;
 
-			case ( $return instanceof \Prjkt\Component\Repofuck\Repofuck ):
+			case ( $return instanceof \Prjkt\Component\Repofuck\Repofuck && ! $return instanceof $this ):
 
 				// This will persist the repository for the next operation
 				// It also gives an advantage as the repository contained
