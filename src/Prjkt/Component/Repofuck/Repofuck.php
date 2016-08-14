@@ -244,7 +244,7 @@ abstract class Repofuck
 	 */
 	public function find($id) : Model
 	{
-		return $this->entities->current()->find($id);
+		return $this->entity->find($id);
 	}
 
 	/**
@@ -261,7 +261,7 @@ abstract class Repofuck
 			{
 				case ( is_numeric($params) ):
 
-					$entity = $this->entities->current()->findOrFail($params);
+					$entity = $this->entity->findOrFail($params);
 
 				break;
 
@@ -269,13 +269,13 @@ abstract class Repofuck
 
 					$params = ! $this->hasValues($params) ? $this->getData() : $params;
 
-					$entity = $this->entities->current()->where($params)->firstOrFail($this->getColumns());
+					$entity = $this->entity->where($params)->firstOrFail($this->getColumns());
 
 				break;
 
 				case ( is_string($params) && ! is_null($value) ):
 
-					$entity = $this->entities->current()->where($params, $value)->firstOrFail();
+					$entity = $this->entity->where($params, $value)->firstOrFail();
 
 				break;
 			}
@@ -310,7 +310,7 @@ abstract class Repofuck
 			case ( $return instanceof Builder or $return instanceof Model ):
 
 				// This will persist the entity throughout the repository for the next operation
-				$this->entity = ($this->entities->set($return))->current();
+				$this->entity = $return;
 
 			break;
 
@@ -343,7 +343,7 @@ abstract class Repofuck
 	 */
 	public function get() : Collection
 	{
-		return $this->entities->current()->get();
+		return $this->entity->get();
 	}
 
 	/**
@@ -401,7 +401,7 @@ abstract class Repofuck
 	 */
 	protected function map(array $inserts, array $keys = [], Model $entity = null) : Model
 	{
-		$entity = is_null($entity) ? $this->entities->current() : $entity;
+		$entity = is_null($entity) ? $this->entity : $entity;
 
 		if ( $this->hasValues($keys) ) {
 
