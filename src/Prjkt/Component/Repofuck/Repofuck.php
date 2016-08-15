@@ -153,6 +153,18 @@ abstract class Repofuck
 	}
 
 	/**
+	 * Resets the entity
+	 *
+	 * @param string $name [def=null]
+	 */
+	public function resetEntity(string $name = null) :\Prjkt\Component\Repofuck\Repofuck
+	{
+		$this->entity = $this->entities->resolve($name);
+
+		return $this;
+	}
+
+	/**
 	 * Set the data and keys for the repository
 	 *
 	 * @param array $parameters
