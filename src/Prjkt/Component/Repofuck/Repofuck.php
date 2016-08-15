@@ -290,14 +290,11 @@ abstract class Repofuck
 	 * Prepares the persistence of a repository or entity
 	 *
 	 * @param \Closure $function
-	 * @param array $parameters
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	public function prepare(Closure $function, array $parameters = []) : \Prjkt\Component\Repofuck\Repofuck
+	public function prepare(Closure $function) : \Prjkt\Component\Repofuck\Repofuck
 	{
-		$parameters = ! $this->hasValues($parameters) ? $this->getData() : $parameters;
-
-		$return = call_user_func_array($function, [$this, $parameters]);
+		$return = call_user_func_array($function, [$this]);
 
 		switch($return)
 		{
