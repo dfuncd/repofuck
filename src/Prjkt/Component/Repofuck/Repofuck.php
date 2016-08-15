@@ -306,7 +306,7 @@ abstract class Repofuck
 	 */
 	public function prepare(Closure $function) : \Prjkt\Component\Repofuck\Repofuck
 	{
-		$return = call_user_func_array($function, [$this]);
+		$return = call_user_func_array($function, [($this)->resetEntity()]);
 
 		switch($return)
 		{
