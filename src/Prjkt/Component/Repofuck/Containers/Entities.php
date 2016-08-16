@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\{
 
 use Prjkt\Component\Repofuck\{
 	Exceptions\ResourceNotFound,
+	Exceptions\EntityNotDefined,
 	Traits\Operations
 };
 

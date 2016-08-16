@@ -153,6 +153,18 @@ abstract class Repofuck
 	}
 
 	/**
+	 * Resets the entity
+	 *
+	 * @param string $name [def=null]
+	 */
+	public function resetEntity(string $name = null) :\Prjkt\Component\Repofuck\Repofuck
+	{
+		$this->entity = $this->entities->resolve($name);
+
+		return $this;
+	}
+
+	/**
 	 * Set the data and keys for the repository
 	 *
 	 * @param array $parameters
@@ -290,14 +302,11 @@ abstract class Repofuck
 	 * Prepares the persistence of a repository or entity
 	 *
 	 * @param \Closure $function
-	 * @param array $parameters
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	public function prepare(Closure $function, array $parameters = []) : \Prjkt\Component\Repofuck\Repofuck
+	public function prepare(Closure $function) : \Prjkt\Component\Repofuck\Repofuck
 	{
-		$parameters = ! $this->hasValues($parameters) ? $this->getData() : $parameters;
-
-		$return = call_user_func_array($function, [$this, $parameters]);
+		$return = call_user_func_array($function, [($this)->resetEntity()]);
 
 		switch($return)
 		{
