@@ -323,6 +323,13 @@ abstract class Repofuck
 
 			break;
 
+			case ( $return instanceof \Prjkt\Component\Repofuck\Repofuck && $return instanceof $this ):
+
+				// Returns a modified persistence of itself where operations are contained
+				return $return;
+
+			break;
+
 			case ( $return instanceof \Prjkt\Component\Repofuck\Repofuck && ! $return instanceof $this ):
 
 				// This will persist the repository for the next operation
