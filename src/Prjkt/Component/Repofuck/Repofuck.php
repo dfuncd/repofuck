@@ -146,9 +146,7 @@ abstract class Repofuck
 		// If the entity property has not yet defined, set it with first configured entity
 		if ( ! is_object($this->entities->has()) ) {
 			$this->entities->set($this->entities->resolve(null, $this->resolveRepoName($this)));
-
 			$this->entity = $this->entities->current();
-
 		}
 
 		return true;
@@ -308,7 +306,6 @@ abstract class Repofuck
 	 */
 	public function prepare(Closure $function) : \Prjkt\Component\Repofuck\Repofuck
 	{
-
 		$return = call_user_func_array($function, [($this)->resetEntity()]);
 
 		switch($return)
@@ -352,7 +349,6 @@ abstract class Repofuck
 		}
 
 		// If there's a repository being persisted, return it, defer to self when there's none
-
 		return $this;
 	}
 
