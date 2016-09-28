@@ -471,7 +471,7 @@ abstract class Repofuck
 		}
 
 		// Assign the entity with the newly attached where clause
-		$this->entity = $entity
+		$this->entity = $entity;
 
 		return $this;
 	}
