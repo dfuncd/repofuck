@@ -264,7 +264,7 @@ abstract class Repofuck
 	 *
 	 * @param integer|array|string
 	 * @param string
-	 * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection
+	 * @return \Illuminate\Database\Eloquent\Model
 	 */
 	public function first($params, $value = null)
 	{
