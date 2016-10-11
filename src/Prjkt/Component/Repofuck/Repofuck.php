@@ -8,7 +8,8 @@ use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\{
 	Model,
 	Collection,
-	Builder
+	Builder,
+	ModelNotFoundException
 };
 
 use Exceptions\{
@@ -291,7 +292,7 @@ abstract class Repofuck
 
 				break;
 			}
-		} catch ( \Illuminate\Database\Eloquent\ModelNotFoundException $e ) {
+		} catch ( ModelNotFoundException $e ) {
 			return false;
 		}
 
