@@ -451,23 +451,24 @@ abstract class Repofuck
 
 		// Overwrite: Strip down the Builder to a Model when 
 		// the current entity has a where clause and $append is false 
-		if ($entity instanceof Builder && false === $append)
-		{
+		if ( ! $append && $entity instanceof Builder ) {
 			$entity = $this->entity->getModel();
 		}
 
 		// Supplied callback return to be attached
 		try	{
+
 			$entity = call_user_func($query, $entity);
 
-			if (!($entity instanceof Builder))
-			{
+			if ( ! $entity instanceof Builder ) {
 				throw new InvalidCallbackReturn;
 			}
 
-		} catch (InvalidCallbackReturn $icr){
+		} catch (InvalidCallbackReturn $e) {
+
 			//Retain the current entity as it was before this method's call.
 			$entity = $this->entity;
+
 		}
 
 		// Assign the entity with the newly attached where clause
