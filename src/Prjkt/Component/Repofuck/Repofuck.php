@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\{
 	Builder
 };
 
-use Exceptions\{
+use Prjkt\Component\Repofuck\Exceptions\{
 	EntityNotDefined,
 	ResourceNotFound,
 	InvalidCallback,
