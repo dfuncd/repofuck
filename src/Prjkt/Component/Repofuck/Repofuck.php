@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\{
 	ModelNotFoundException
 };
 
-use Exceptions\{
+use Prjkt\Component\Repofuck\Exceptions\{
 	EntityNotDefined,
 	ResourceNotFound,
 	InvalidCallback,
