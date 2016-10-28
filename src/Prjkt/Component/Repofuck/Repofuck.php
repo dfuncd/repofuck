@@ -154,6 +154,19 @@ abstract class Repofuck
 	}
 
 	/**
+	 * Sets the entity to be chained
+	 *
+	 * @param string $name
+	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 */
+	public function entity(string $name) : \Prjkt\Component\Repofuck\Repofuck
+	{
+		$this->entity = $this->entities->resolve($name);
+
+		return $this;
+	}
+
+	/**
 	 * Resets the entity
 	 *
 	 * @param string $name [def=null]
