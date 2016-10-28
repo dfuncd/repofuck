@@ -167,15 +167,13 @@ abstract class Repofuck
 	}
 
 	/**
-	 * Resets the entity
+	 * [Deprecated] Resets the entity
 	 *
 	 * @param string $name [def=null]
 	 */
 	public function resetEntity(string $name = null) :\Prjkt\Component\Repofuck\Repofuck
 	{
-		$this->entity = $this->entities->resolve($name);
-
-		return $this;
+		return $this->entity($name);
 	}
 
 	/**
