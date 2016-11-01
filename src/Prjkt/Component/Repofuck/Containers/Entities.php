@@ -94,7 +94,7 @@ class Entities
 			break;
 		}
 
-		throw new Exceptions\EntityNotDefined;
+		throw new EntityNotDefined;
 	}
 
 	/**
