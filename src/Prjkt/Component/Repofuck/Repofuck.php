@@ -159,7 +159,7 @@ abstract class Repofuck
 	 * @param string $name
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	public function entity(string $name) : \Prjkt\Component\Repofuck\Repofuck
+	public function entity(string $name = null) : \Prjkt\Component\Repofuck\Repofuck
 	{
 		$this->entity = $this->entities->resolve($name);
 
