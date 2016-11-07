@@ -286,36 +286,33 @@ abstract class Repofuck
 	 * Finds the first entity by the given parameters
 	 *
 	 * @param integer|array|string
-	 * @param string
+	 * @param string $value
+	 * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
 	 * @return \Illuminate\Database\Eloquent\Model
 	 */
 	public function first($params, $value = null)
 	{
-		try {
-			switch ($params)
-			{
-				case ( is_numeric($params) ):
+		switch ($params)
+		{
+			case ( is_numeric($params) ):
 
-					$entity = $this->entity->findOrFail($params);
+				$entity = $this->entity->findOrFail($params);
 
-				break;
+			break;
 
-				case ( is_array($params) ):
+			case ( is_array($params) ):
 
-					$params = ! $this->hasValues($params) ? $this->getData() : $params;
+				$params = ! $this->hasValues($params) ? $this->getData() : $params;
 
-					$entity = $this->entity->where($params)->firstOrFail($this->getColumns());
+				$entity = $this->entity->where($params)->firstOrFail($this->getColumns());
 
-				break;
+			break;
 
-				case ( is_string($params) && ! is_null($value) ):
+			case ( is_string($params) && ! is_null($value) ):
 
-					$entity = $this->entity->where($params, $value)->firstOrFail();
+				$entity = $this->entity->where($params, $value)->firstOrFail();
 
-				break;
-			}
-		} catch ( ModelNotFoundException $e ) {
-			return false;
+			break;
 		}
 
 		return $entity;
