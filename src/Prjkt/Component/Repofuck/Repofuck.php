@@ -154,15 +154,37 @@ abstract class Repofuck
 	}
 
 	/**
-	 * Resets the entity
+	 * Sets the entity to be chained
+	 *
+	 * @param string $name
+	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 */
+	public function entity(string $name = null) : \Prjkt\Component\Repofuck\Repofuck
+	{
+		$this->entity = $this->entities->resolve($name);
+
+		return $this;
+	}
+
+	/**
+	 * [Deprecated] Resets the entity
 	 *
 	 * @param string $name [def=null]
 	 */
 	public function resetEntity(string $name = null) :\Prjkt\Component\Repofuck\Repofuck
 	{
-		$this->entity = $this->entities->resolve($name);
+		return $this->entity($name);
+	}
 
-		return $this;
+	/**
+	 * [Deprecated] Set the data and keys for the repository
+	 *
+	 * @param array $parameters
+	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 */
+	public function setDataAndKeys(array $parameters) : \Prjkt\Component\Repofuck\Repofuck
+	{
+		return $this->data($paramaters);
 	}
 
 	/**
@@ -171,7 +193,7 @@ abstract class Repofuck
 	 * @param array $parameters
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	public function setDataAndKeys(array $parameters) : \Prjkt\Component\Repofuck\Repofuck
+	public function data(array $parameters) : \Prjkt\Component\Repofuck\Repofuck
 	{
 		$keys = array_keys($parameters);
 
