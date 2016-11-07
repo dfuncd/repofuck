@@ -177,12 +177,23 @@ abstract class Repofuck
 	}
 
 	/**
-	 * Set the data and keys for the repository
+	 * [Deprecated] Set the data and keys for the repository
 	 *
 	 * @param array $parameters
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
 	public function setDataAndKeys(array $parameters) : \Prjkt\Component\Repofuck\Repofuck
+	{
+		return $this->data($paramaters);
+	}
+
+	/**
+	 * Set the data and keys for the repository
+	 *
+	 * @param array $parameters
+	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 */
+	public function data(array $parameters) : \Prjkt\Component\Repofuck\Repofuck
 	{
 		$keys = array_keys($parameters);
 
