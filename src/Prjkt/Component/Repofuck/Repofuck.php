@@ -157,9 +157,9 @@ abstract class Repofuck
 	 * Sets the entity to be chained
 	 *
 	 * @param string $name
-	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 * @return self
 	 */
-	public function entity(string $name = null) : \Prjkt\Component\Repofuck\Repofuck
+	public function entity(string $name = null) : self
 	{
 		$this->entity = $this->entities->resolve($name);
 
@@ -171,7 +171,7 @@ abstract class Repofuck
 	 *
 	 * @param string $name [def=null]
 	 */
-	public function resetEntity(string $name = null) :\Prjkt\Component\Repofuck\Repofuck
+	public function resetEntity(string $name = null) :self
 	{
 		return $this->entity($name);
 	}
@@ -180,9 +180,9 @@ abstract class Repofuck
 	 * [Deprecated] Set the data and keys for the repository
 	 *
 	 * @param array $parameters
-	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 * @return self
 	 */
-	public function setDataAndKeys(array $parameters) : \Prjkt\Component\Repofuck\Repofuck
+	public function setDataAndKeys(array $parameters) : self
 	{
 		return $this->data($paramaters);
 	}
@@ -191,9 +191,9 @@ abstract class Repofuck
 	 * Set the data and keys for the repository
 	 *
 	 * @param array $parameters
-	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 * @return self
 	 */
-	public function data(array $parameters) : \Prjkt\Component\Repofuck\Repofuck
+	public function data(array $parameters) : self
 	{
 		$keys = array_keys($parameters);
 
@@ -206,9 +206,9 @@ abstract class Repofuck
 	 * Set the columns to be queried
 	 *
 	 * @param array $columns
-	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 * @return self
 	 */
-	public function setColumns(array $columns) : \Prjkt\Component\Repofuck\Repofuck
+	public function setColumns(array $columns) : self
 	{
 		$this->columns = $columns;
 
@@ -219,9 +219,9 @@ abstract class Repofuck
 	 * Set the data for the repository
 	 *
 	 * @param array
-	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 * @return self
 	 */
-	public function setData(array $data) : \Prjkt\Component\Repofuck\Repofuck
+	public function setData(array $data) : self
 	{
 		$this->data = $data;
 
@@ -232,9 +232,9 @@ abstract class Repofuck
 	 * Set the keys for the repository
 	 *
 	 * @param array
-	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 * @return self
 	 */
-	public function setKeys(array $keys) : \Prjkt\Component\Repofuck\Repofuck
+	public function setKeys(array $keys) : self
 	{
 		$this->keys = $keys;
 
@@ -322,9 +322,9 @@ abstract class Repofuck
 	 * Prepares the persistence of a repository or entity
 	 *
 	 * @param \Closure $function
-	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 * @return self
 	 */
-	public function prepare(Closure $function) : \Prjkt\Component\Repofuck\Repofuck
+	public function prepare(Closure $function) : self
 	{
 		$return = call_user_func_array($function, [($this)->resetEntity()]);
 
@@ -343,14 +343,14 @@ abstract class Repofuck
 
 			break;
 
-			case ( $return instanceof \Prjkt\Component\Repofuck\Repofuck && $return instanceof $this ):
+			case ( $return instanceof self && $return instanceof $this ):
 
 				// Returns a modified persistence of itself where operations are contained
 				return $return;
 
 			break;
 
-			case ( $return instanceof \Prjkt\Component\Repofuck\Repofuck && ! $return instanceof $this ):
+			case ( $return instanceof self && ! $return instanceof $this ):
 
 				// This will persist the repository for the next operation
 				// It also gives an advantage as the repository contained
@@ -463,7 +463,7 @@ abstract class Repofuck
      *
      * @param Closure $query
      * @param bool $append
-     * @return \Prjkt\Component\Repofuck\Repofuck
+     * @return self
      */
 	public function where(Closure $query, $append = false)
 	{
