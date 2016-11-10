@@ -56,9 +56,9 @@ class Repositories
 	 * Pushes the repository to the container
 	 *
 	 * @param \Prjkt\Component\Repofuck\Repofuck $repository
-	 * @return \Prjkt\Component\Repofuck\Containers\Repositories
+	 * @return self
 	 */
-	public function push(\Prjkt\Component\Repofuck\Repofuck $repository) : \Prjkt\Component\Repofuck\Containers\Repositories
+	public function push(\Prjkt\Component\Repofuck\Repofuck $repository) : self
 	{
 		$this->repositories[$this->resolveRepoName($repository)] = $repository;
 
@@ -87,7 +87,7 @@ class Repositories
 	 * @param \Prjkt\Component\Repofuck\Repofuck $repository
 	 * @return \Prjkt\Component\Repofuck\Repofuck
 	 */
-	public function set(\Prjkt\Component\Repofuck\Repofuck $repository) : \Prjkt\Component\Repofuck\Containers\Repositories
+	public function set(\Prjkt\Component\Repofuck\Repofuck $repository) : self
 	{
 		$this->repository = $repository;
 
