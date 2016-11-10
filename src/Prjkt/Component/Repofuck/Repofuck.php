@@ -383,6 +383,16 @@ abstract class Repofuck
 	}
 
 	/**
+	 * Paginates the entity
+	 *
+	 * @return \Illuminate\Pagination\Paginator
+	 */
+	public function paginate() : Paginator
+	{
+		return $this->entity->paginate();
+	}
+
+	/**
 	 * Creates a new model
 	 *
 	 * @return \Illuminate\Database\Eloquent\Model $entity
