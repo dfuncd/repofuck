@@ -61,9 +61,9 @@ class Entities
 	 * Adds the entity to the container
 	 *
 	 * @param \Illuminate\Database\Eloquent\Model
-	 * @return \Prjkt\Component\Repofuck\Containers\Entities
+	 * @return self
 	 */
-	public function push(Model $entity, string $name = null)
+	public function push(Model $entity, string $name = null) : self
 	{
 		$name = is_null($name) ? $entity->getTable() : $name;
 
@@ -101,9 +101,9 @@ class Entities
 	 * Sets the current entity
 	 *
 	 * @param mixed $entity
-	 * @return \Prjkt\Component\Repofuck\Containers\Entities
+	 * @return self
 	 */
-	public function set($entity) : \Prjkt\Component\Repofuck\Containers\Entities
+	public function set($entity) : self
 	{
 		switch($entity)
 		{
