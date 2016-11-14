@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\{
 	Builder,
 	ModelNotFoundException
 };
+use Illuminate\Pagination\LengthAwarePaginator;
 
 use Prjkt\Component\Repofuck\Exceptions\{
 	EntityNotDefined,
@@ -78,6 +79,13 @@ abstract class Repofuck
 	 * @var array
 	 */
 	protected $columns = ['*'];
+
+	/**
+	 * Numbers items to be paginated
+	 *
+	 * @var int
+	 */
+	protected $paginates = 15;
 
 	/**
 	 * Class constructor
@@ -385,11 +393,13 @@ abstract class Repofuck
 	/**
 	 * Paginates the entity
 	 *
-	 * @return \Illuminate\Pagination\Paginator
+	 * @return \Illuminate\Pagination\LengthAwarePaginator
 	 */
-	public function paginate() : Paginator
+	public function paginate(int $items = null) : LengthAwarePaginator
 	{
-		return $this->entity->paginate();
+		$items = is_null($items) ? $this->paginates : $items;
+		
+		return $this->entity->paginate($items);
 	}
 
 	/**
