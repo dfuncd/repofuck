@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\{
 	Builder,
 	ModelNotFoundException
 };
+use Illuminate\Pagination\LengthAwarePaginator;
 
 use Prjkt\Component\Repofuck\Exceptions\{
 	EntityNotDefined,
@@ -78,6 +79,13 @@ abstract class Repofuck
 	 * @var array
 	 */
 	protected $columns = ['*'];
+
+	/**
+	 * Numbers items to be paginated
+	 *
+	 * @var int
+	 */
+	protected $paginates = 15;
 
 	/**
 	 * Class constructor
@@ -157,9 +165,9 @@ abstract class Repofuck
 	 * Sets the entity to be chained
 	 *
 	 * @param string $name
-	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 * @return self
 	 */
-	public function entity(string $name = null) : \Prjkt\Component\Repofuck\Repofuck
+	public function entity(string $name = null) : self
 	{
 		$this->entity = $this->entities->resolve($name);
 
@@ -171,7 +179,7 @@ abstract class Repofuck
 	 *
 	 * @param string $name [def=null]
 	 */
-	public function resetEntity(string $name = null) :\Prjkt\Component\Repofuck\Repofuck
+	public function resetEntity(string $name = null) :self
 	{
 		return $this->entity($name);
 	}
@@ -180,9 +188,9 @@ abstract class Repofuck
 	 * [Deprecated] Set the data and keys for the repository
 	 *
 	 * @param array $parameters
-	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 * @return self
 	 */
-	public function setDataAndKeys(array $parameters) : \Prjkt\Component\Repofuck\Repofuck
+	public function setDataAndKeys(array $parameters) : self
 	{
 		return $this->data($paramaters);
 	}
@@ -191,9 +199,9 @@ abstract class Repofuck
 	 * Set the data and keys for the repository
 	 *
 	 * @param array $parameters
-	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 * @return self
 	 */
-	public function data(array $parameters) : \Prjkt\Component\Repofuck\Repofuck
+	public function data(array $parameters) : self
 	{
 		$keys = array_keys($parameters);
 
@@ -206,9 +214,9 @@ abstract class Repofuck
 	 * Set the columns to be queried
 	 *
 	 * @param array $columns
-	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 * @return self
 	 */
-	public function setColumns(array $columns) : \Prjkt\Component\Repofuck\Repofuck
+	public function setColumns(array $columns) : self
 	{
 		$this->columns = $columns;
 
@@ -219,9 +227,9 @@ abstract class Repofuck
 	 * Set the data for the repository
 	 *
 	 * @param array
-	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 * @return self
 	 */
-	public function setData(array $data) : \Prjkt\Component\Repofuck\Repofuck
+	public function setData(array $data) : self
 	{
 		$this->data = $data;
 
@@ -232,9 +240,9 @@ abstract class Repofuck
 	 * Set the keys for the repository
 	 *
 	 * @param array
-	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 * @return self
 	 */
-	public function setKeys(array $keys) : \Prjkt\Component\Repofuck\Repofuck
+	public function setKeys(array $keys) : self
 	{
 		$this->keys = $keys;
 
@@ -286,36 +294,33 @@ abstract class Repofuck
 	 * Finds the first entity by the given parameters
 	 *
 	 * @param integer|array|string
-	 * @param string
+	 * @param string $value
+	 * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
 	 * @return \Illuminate\Database\Eloquent\Model
 	 */
 	public function first($params, $value = null)
 	{
-		try {
-			switch ($params)
-			{
-				case ( is_numeric($params) ):
+		switch ($params)
+		{
+			case ( is_numeric($params) ):
 
-					$entity = $this->entity->findOrFail($params);
+				$entity = $this->entity->findOrFail($params);
 
-				break;
+			break;
 
-				case ( is_array($params) ):
+			case ( is_array($params) ):
 
-					$params = ! $this->hasValues($params) ? $this->getData() : $params;
+				$params = ! $this->hasValues($params) ? $this->getData() : $params;
 
-					$entity = $this->entity->where($params)->firstOrFail($this->getColumns());
+				$entity = $this->entity->where($params)->firstOrFail($this->getColumns());
 
-				break;
+			break;
 
-				case ( is_string($params) && ! is_null($value) ):
+			case ( is_string($params) && ! is_null($value) ):
 
-					$entity = $this->entity->where($params, $value)->firstOrFail();
+				$entity = $this->entity->where($params, $value)->firstOrFail();
 
-				break;
-			}
-		} catch ( ModelNotFoundException $e ) {
-			return false;
+			break;
 		}
 
 		return $entity;
@@ -325,9 +330,9 @@ abstract class Repofuck
 	 * Prepares the persistence of a repository or entity
 	 *
 	 * @param \Closure $function
-	 * @return \Prjkt\Component\Repofuck\Repofuck
+	 * @return self
 	 */
-	public function prepare(Closure $function) : \Prjkt\Component\Repofuck\Repofuck
+	public function prepare(Closure $function) : self
 	{
 		$return = call_user_func_array($function, [($this)->resetEntity()]);
 
@@ -346,14 +351,14 @@ abstract class Repofuck
 
 			break;
 
-			case ( $return instanceof \Prjkt\Component\Repofuck\Repofuck && $return instanceof $this ):
+			case ( $return instanceof self && $return instanceof $this ):
 
 				// Returns a modified persistence of itself where operations are contained
 				return $return;
 
 			break;
 
-			case ( $return instanceof \Prjkt\Component\Repofuck\Repofuck && ! $return instanceof $this ):
+			case ( $return instanceof self && ! $return instanceof $this ):
 
 				// This will persist the repository for the next operation
 				// It also gives an advantage as the repository contained
@@ -383,6 +388,18 @@ abstract class Repofuck
 	public function get() : Collection
 	{
 		return $this->entity->get();
+	}
+
+	/**
+	 * Paginates the entity
+	 *
+	 * @return \Illuminate\Pagination\LengthAwarePaginator
+	 */
+	public function paginate(int $items = null) : LengthAwarePaginator
+	{
+		$items = is_null($items) ? $this->paginates : $items;
+		
+		return $this->entity->paginate($items);
 	}
 
 	/**
@@ -466,7 +483,7 @@ abstract class Repofuck
      *
      * @param Closure $query
      * @param bool $append
-     * @return \Prjkt\Component\Repofuck\Repofuck
+     * @return self
      */
 	public function where(Closure $query, $append = false)
 	{
