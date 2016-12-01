@@ -36,7 +36,7 @@ abstract class Repofuck
 	 *
 	 * @var \Illuminate\Database\Eloquent\Model
 	 */
-	public $entity;
+	protected $entity;
 
 	/**
 	 * Entities container
