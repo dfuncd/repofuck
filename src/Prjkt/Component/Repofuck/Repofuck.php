@@ -165,12 +165,22 @@ abstract class Repofuck
 	 * Sets the entity to be chained
 	 *
 	 * @param string $name
+	 * @param Closure $closure
+	 * @throws Prjkt\Component\Repofuck\Exceptions\InstanceNotEntityException
 	 * @return self
 	 */
-	public function entity(string $name = null) : self
+	public function entity(string $name = null, Closure $closure = null) : self
 	{
-		$this->entity = $this->entities->resolve($name);
+		$entity = $this->entity = $this->entities->resolve($name);
 
+		if ( $closure instanceof Closure ) {
+			$return = call_user_func($closure, $entity);
+		}
+		
+		if ( ! $return instanceof Model ) {
+			throw new InstanceNotEntityException;
+		}
+		
 		return $this;
 	}
 
@@ -327,60 +337,6 @@ abstract class Repofuck
 	}
 
 	/**
-	 * Prepares the persistence of a repository or entity
-	 *
-	 * @param \Closure $function
-	 * @return self
-	 */
-	public function prepare(Closure $function) : self
-	{
-		$return = call_user_func_array($function, [($this)->resetEntity()]);
-
-		switch($return)
-		{
-			case null:
-
-				return $this;
-
-			break;
-			
-			case ( $return instanceof Builder or $return instanceof Model ):
-
-				// This will persist the entity throughout the repository for the next operation
-				$this->entity = $return;
-
-			break;
-
-			case ( $return instanceof self && $return instanceof $this ):
-
-				// Returns a modified persistence of itself where operations are contained
-				return $return;
-
-			break;
-
-			case ( $return instanceof self && ! $return instanceof $this ):
-
-				// This will persist the repository for the next operation
-				// It also gives an advantage as the repository contained
-				$this->repositories->set($return);
-
-				return $this->repositories->resolve();
-
-			break;
-
-			case ( is_array($return) ):
-
-				// This will persist the keys and data returned
-				$this->setDataAndKeys($return);
-
-			break;
-		}
-
-		// If there's a repository being persisted, return it, defer to self when there's none
-		return $this;
-	}
-
-	/**
 	 * Gets an entity by parameters
 	 *
 	 * @return \Illuminate\Database\Eloquent\Collection
@@ -409,6 +365,8 @@ abstract class Repofuck
 	 */
 	public function create() : Model
 	{
+		$this->entity = new $this->entity;
+		
 		$entity = $this->map($this->getData(), $this->getkeys());
 		$entity->save();
 
