@@ -409,6 +409,8 @@ abstract class Repofuck
 	 */
 	public function create() : Model
 	{
+		$this->entity = new $this->entity;
+		
 		$entity = $this->map($this->getData(), $this->getkeys());
 		$entity->save();
 
