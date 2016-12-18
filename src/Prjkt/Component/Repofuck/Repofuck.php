@@ -420,11 +420,14 @@ abstract class Repofuck
 	/**
 	 * Updates the entity
 	 *
+	 * @param mixed int|string|array|\Illuminate\Database\Eloquent\Model
 	 * @return \Illuminate\Database\Eloquent\Model $entity
 	 */
 	public function update($identifier) : Model
 	{
-		$entity = $this->map($this->getData(), $this->getkeys(), $this->first($identifier));
+		$entity = $identifier instanceof Model ? $identifier : $this->first($identifier);
+		$entity = $this->map($this->getData(), $this->getkeys(), $entity);
+		
 		$entity->save();
 
 		return $entity;
