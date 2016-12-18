@@ -415,7 +415,7 @@ abstract class Repofuck
 	{
 		$this->entity = new $this->entity;
 		
-		$entity = $this->map($this->getData(), $this->getkeys());
+		$entity = $this->map($this->getData());
 		$entity->save();
 
 		return $entity;
@@ -430,7 +430,7 @@ abstract class Repofuck
 	public function update($identifier) : Model
 	{
 		$entity = $identifier instanceof Model ? $identifier : $this->first($identifier);
-		$entity = $this->map($this->getData(), $this->getkeys(), $entity);
+		$entity = $this->map($this->getData(), $entity);
 
 		$entity->save();
 
@@ -459,16 +459,15 @@ abstract class Repofuck
 	 * Mass assignment
 	 *
 	 * @param array $inserts
-	 * @param array $keys
 	 * @param \Illuminate\Database\Eloquent\Model $entity
 	 * @throws \Prjkt\Component\Repofuck\Exceptions\EntityNotDefined
 	 * @return \Illuminate\Database\Eloquent\Model
 	 */
-	protected function map(array $inserts, array $keys = [], Model $entity = null) : Model
+	protected function map(array $inserts, Model $entity = null) : Model
 	{
 		$entity = is_null($entity) ? $this->entity : $entity;
 
-		if ( $this->hasValues($keys) ) {
+		if ( $this->hasValues($this->keys) ) {
 
 			foreach($inserts as $key => $val)
 			{
