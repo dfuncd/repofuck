@@ -192,20 +192,24 @@ abstract class Repofuck
 	 */
 	public function setDataAndKeys(array $parameters) : self
 	{
-		return $this->data($paramaters);
+		return $this->data($paramaters, true);
 	}
 
 	/**
 	 * Set the data and keys for the repository
 	 *
 	 * @param array $parameters
+	 * @param bool $keys [def=false] Set the keys
 	 * @return self
 	 */
-	public function data(array $parameters) : self
+	public function data(array $parameters, bool $keys = false) : self
 	{
-		$keys = array_keys($parameters);
+		if ( $keys ) {
+			$keys = array_keys($parameters);
+			$this->setKeys($keys);
+		}
 
-		$this->setKeys($keys)->setData($parameters);
+		$this->setData($parameters);
 
 		return $this;
 	}
@@ -427,7 +431,7 @@ abstract class Repofuck
 	{
 		$entity = $identifier instanceof Model ? $identifier : $this->first($identifier);
 		$entity = $this->map($this->getData(), $this->getkeys(), $entity);
-		
+
 		$entity->save();
 
 		return $entity;
