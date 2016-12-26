@@ -192,7 +192,7 @@ abstract class Repofuck
 	 */
 	public function setDataAndKeys(array $parameters) : self
 	{
-		return $this->data($paramaters, true);
+		return $this->data($parameters, true);
 	}
 
 	/**
