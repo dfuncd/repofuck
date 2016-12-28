@@ -167,9 +167,21 @@ abstract class Repofuck
 	 * @param string $name
 	 * @return self
 	 */
-	public function entity(string $name = null) : self
+	public function entity(string $name = null, Closure $closure = null) : self
 	{
 		$this->entity = $this->entities->resolve($name);
+
+		if ( ! $closure instanceof Closure ) {
+			throw new InvalidCallback;
+		}
+		
+		$return = call_user_func_array($closure, [$this->entity]);
+
+		if ( ! $return instanceof Model || ! $return instanceof Builder ) {
+			throw new InvalidCallbackReturn;
+		}
+
+		$this->entity = $return;
 
 		return $this;
 	}
