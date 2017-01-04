@@ -171,17 +171,17 @@ abstract class Repofuck
 	{
 		$this->entity = $this->entities->resolve($name);
 
-		if ( ! $closure instanceof Closure ) {
-			throw new InvalidCallback;
-		}
-		
-		$return = call_user_func_array($closure, [$this->entity]);
+		if ( $closure instanceof Closure ) {
+			
+			$return = call_user_func_array($closure, [$this->entity]);
 
-		if ( ! $return instanceof Model || ! $return instanceof Builder ) {
-			throw new InvalidCallbackReturn;
-		}
+			if ( ! $return instanceof Model || ! $return instanceof Builder ) {
+				throw new InvalidCallbackReturn;
+			}
 
-		$this->entity = $return;
+			$this->entity = $return;
+
+		}
 
 		return $this;
 	}
