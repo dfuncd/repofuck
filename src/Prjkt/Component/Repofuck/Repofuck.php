@@ -199,17 +199,6 @@ abstract class Repofuck
 	}
 
 	/**
-	 * [Deprecated] Set the data and keys for the repository
-	 *
-	 * @param array $parameters
-	 * @return self
-	 */
-	public function setDataAndKeys(array $parameters) : self
-	{
-		return $this->data($parameters, true);
-	}
-
-	/**
 	 * Set the data and keys for the repository
 	 *
 	 * @param array $parameters
