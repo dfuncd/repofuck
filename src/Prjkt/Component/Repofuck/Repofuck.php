@@ -255,25 +255,16 @@ abstract class Repofuck
 	}
 
 	/**
-	 * Get the columns
+	 * Set the columns for the repository
 	 *
-	 * @return array
+	 * @return $this
 	 */
-	public function getColumns() : array
+	public function columns(array $columns = []) : array
 	{
-		return $this->columns;
-	}
+		$this->columns = $columns;
 
-	/**
-	 * Get the data in the repository
-	 *
-	 * @return array
-	 */
-	public function getData() : array
-	{
-		return $this->data;
+		return $this;
 	}
-
 	/**
 	 * Get the keys in the repository
 	 *
