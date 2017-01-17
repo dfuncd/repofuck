@@ -214,20 +214,7 @@ abstract class Repofuck
 
 		return $this;
 	}
-
-	/**
-	 * Set the columns to be queried
-	 *
-	 * @param array $columns
-	 * @return self
-	 */
-	public function setColumns(array $columns) : self
-	{
-		$this->columns = $columns;
-
-		return $this;
-	}
-
+	
 	/**
 	 * Set the data for the repository
 	 *
@@ -297,9 +284,9 @@ abstract class Repofuck
 
 			case ( is_array($params) ):
 
-				$params = ! $this->hasValues($params) ? $this->getData() : $params;
+				$params = ! $this->hasValues($params) ? $this->data : $params;
 
-				$entity = $this->entity->where($params)->firstOrFail($this->getColumns());
+				$entity = $this->entity->where($params)->firstOrFail($this->columns);
 
 			break;
 
@@ -344,7 +331,7 @@ abstract class Repofuck
 	{
 		$this->entity = new $this->entity;
 		
-		$entity = $this->map($this->getData());
+		$entity = $this->map($this->data);
 		
 		$entity->save();
 
@@ -360,7 +347,7 @@ abstract class Repofuck
 	public function update($identifier) : Model
 	{
 		$entity = $identifier instanceof Model ? $identifier : $this->first($identifier);
-		$entity = $this->map($this->getData(), $entity);
+		$entity = $this->map($this->data, $entity);
 
 		$entity->save();
 
