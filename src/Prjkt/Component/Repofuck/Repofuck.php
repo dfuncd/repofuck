@@ -199,20 +199,18 @@ abstract class Repofuck
 	}
 
 	/**
-	 * Set the data and keys for the repository
+	 * Set the fill data and keys for the repository
 	 *
 	 * @param array $parameters
-	 * @param bool $keys [def=false] Set the keys
 	 * @return self
 	 */
-	public function data(array $parameters, bool $keys = false) : self
+	public function fill(array $parameters) : self
 	{
 		if ( $keys ) {
-			$keys = array_keys($parameters);
-			$this->setKeys($keys);
+			$this->keys(array_keys($keys));
 		}
 
-		$this->setData($parameters);
+		$this->data($parameters);
 
 		return $this;
 	}
