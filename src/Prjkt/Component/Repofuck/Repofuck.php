@@ -214,7 +214,7 @@ abstract class Repofuck
 
 		return $this;
 	}
-	
+
 	/**
 	 * Set the data for the repository
 	 *
@@ -246,7 +246,7 @@ abstract class Repofuck
 	 *
 	 * @return $this
 	 */
-	public function columns(array $columns = []) : array
+	public function columns(array $columns = []) : self
 	{
 		$this->columns = $columns;
 
