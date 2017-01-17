@@ -265,15 +265,6 @@ abstract class Repofuck
 
 		return $this;
 	}
-	/**
-	 * Get the keys in the repository
-	 *
-	 * @return array
-	 */
-	public function getKeys() : array
-	{
-		return $this->keys;
-	}
 
 	/**
 	 * Finds an entity by its ID
