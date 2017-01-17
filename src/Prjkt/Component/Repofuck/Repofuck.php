@@ -236,7 +236,7 @@ abstract class Repofuck
 	 * @param array
 	 * @return self
 	 */
-	public function setData(array $data) : self
+	public function data(array $data = []) : self
 	{
 		$this->data = $data;
 
@@ -249,7 +249,7 @@ abstract class Repofuck
 	 * @param array
 	 * @return self
 	 */
-	public function setKeys(array $keys) : self
+	public function keys(array $keys = []) : self
 	{
 		$this->keys = $keys;
 
