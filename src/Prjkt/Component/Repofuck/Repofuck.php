@@ -174,13 +174,17 @@ abstract class Repofuck
 		$entity = $this->entity = $this->entities->resolve($name);
 
 		if ( $closure instanceof Closure ) {
-			$return = call_user_func($closure, $entity);
+			
+			$return = call_user_func_array($closure, [$this->entity]);
+
+			if ( ! $return instanceof Model || ! $return instanceof Builder ) {
+				throw new InvalidCallbackReturn;
+			}
+
+			$this->entity = $return;
+
 		}
-		
-		if ( ! $return instanceof Model ) {
-			throw new InstanceNotEntityException;
-		}
-		
+
 		return $this;
 	}
 
@@ -202,20 +206,24 @@ abstract class Repofuck
 	 */
 	public function setDataAndKeys(array $parameters) : self
 	{
-		return $this->data($paramaters);
+		return $this->data($parameters, true);
 	}
 
 	/**
 	 * Set the data and keys for the repository
 	 *
 	 * @param array $parameters
+	 * @param bool $keys [def=false] Set the keys
 	 * @return self
 	 */
-	public function data(array $parameters) : self
+	public function data(array $parameters, bool $keys = false) : self
 	{
-		$keys = array_keys($parameters);
+		if ( $keys ) {
+			$keys = array_keys($parameters);
+			$this->setKeys($keys);
+		}
 
-		$this->setKeys($keys)->setData($parameters);
+		$this->setData($parameters);
 
 		return $this;
 	}
@@ -367,7 +375,8 @@ abstract class Repofuck
 	{
 		$this->entity = new $this->entity;
 		
-		$entity = $this->map($this->getData(), $this->getkeys());
+		$entity = $this->map($this->getData());
+		
 		$entity->save();
 
 		return $entity;
@@ -376,11 +385,14 @@ abstract class Repofuck
 	/**
 	 * Updates the entity
 	 *
+	 * @param mixed int|string|array|\Illuminate\Database\Eloquent\Model
 	 * @return \Illuminate\Database\Eloquent\Model $entity
 	 */
 	public function update($identifier) : Model
 	{
-		$entity = $this->map($this->getData(), $this->getkeys(), $this->first($identifier));
+		$entity = $identifier instanceof Model ? $identifier : $this->first($identifier);
+		$entity = $this->map($this->getData(), $entity);
+
 		$entity->save();
 
 		return $entity;
@@ -408,16 +420,15 @@ abstract class Repofuck
 	 * Mass assignment
 	 *
 	 * @param array $inserts
-	 * @param array $keys
 	 * @param \Illuminate\Database\Eloquent\Model $entity
 	 * @throws \Prjkt\Component\Repofuck\Exceptions\EntityNotDefined
 	 * @return \Illuminate\Database\Eloquent\Model
 	 */
-	protected function map(array $inserts, array $keys = [], Model $entity = null) : Model
+	protected function map(array $inserts, Model $entity = null) : Model
 	{
 		$entity = is_null($entity) ? $this->entity : $entity;
 
-		if ( $this->hasValues($keys) ) {
+		if ( $this->hasValues($this->keys) ) {
 
 			foreach($inserts as $key => $val)
 			{
