@@ -303,7 +303,7 @@ abstract class Repofuck
 	 */
 	public function find($id) : Model
 	{
-		return $this->entity->find($id);
+		return $this->entity->find($id, $this->columns);
 	}
 
 	/**
@@ -320,7 +320,7 @@ abstract class Repofuck
 		{
 			case ( is_numeric($params) ):
 
-				$entity = $this->entity->findOrFail($params);
+				$entity = $this->entity->findOrFail($params, $this->columns);
 
 			break;
 
