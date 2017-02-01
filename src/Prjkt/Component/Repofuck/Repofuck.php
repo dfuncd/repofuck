@@ -320,7 +320,7 @@ abstract class Repofuck
 		{
 			case ( is_numeric($params) ):
 
-				$entity = $this->entity->findOrFail($params, $this->columns);
+				$entity = $this->entity->find($params, $this->columns);
 
 			break;
 
@@ -328,13 +328,13 @@ abstract class Repofuck
 
 				$params = ! $this->hasValues($params) ? $this->getData() : $params;
 
-				$entity = $this->entity->where($params)->firstOrFail($this->getColumns());
+				$entity = $this->entity->where($params)->first($this->getColumns());
 
 			break;
 
 			case ( is_string($params) && ! is_null($value) ):
 
-				$entity = $this->entity->where($params, $value)->firstOrFail();
+				$entity = $this->entity->where($params, $value)->first();
 
 			break;
 		}
