@@ -311,8 +311,7 @@ abstract class Repofuck
 	 *
 	 * @param integer|array|string
 	 * @param string $value
-	 * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
-	 * @return \Illuminate\Database\Eloquent\Model
+	 * @return \Illuminate\Database\Eloquent\Model|boolean
 	 */
 	public function first($params, $value = null)
 	{
