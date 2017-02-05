@@ -175,7 +175,7 @@ abstract class Repofuck
 			
 			$return = call_user_func_array($closure, [$this->entity]);
 
-			if ( ! $return instanceof Model || ! $return instanceof Builder ) {
+			if ( ! $return instanceof Model && ! $return instanceof Builder ) {
 				throw new InvalidCallbackReturn;
 			}
 
