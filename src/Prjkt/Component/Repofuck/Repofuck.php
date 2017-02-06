@@ -457,7 +457,6 @@ abstract class Repofuck
 	 */
 	public function updateOrCreate($identifier) : Model
 	{
-		$entity = $this->entity->firstOrNew($identifier);
 		switch ($identifier) 
 		{
 			case null:
