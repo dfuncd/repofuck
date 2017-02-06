@@ -452,17 +452,40 @@ abstract class Repofuck
 	/**
 	 * Finds an entity and updates it. It's created when it's non-existent  
 	 *
-	 * @param mixed int|string|array|\Illuminate\Database\Eloquent\Model $entity
+	 * @param mixed int|string|array
 	 * @return \Illuminate\Database\Eloquent\Model $entity
 	 */
 	public function updateOrCreate($identifier) : Model
 	{
-		$entity = $identifier;
-
-		if (! $entity instanceof Model) {
-			$entity = $this->first($identifier) ?? new $this->entity;
+		$entity = $this->entity->firstOrNew($identifier);
+		switch ($identifier) 
+		{
+			case null:
+				
+				$entity = new $this->entity;
+				
+			break;
+				
+			case ( is_numeric($identifer) ):
+				
+				$entity = $this->entity->findOrNew($params, $this->columns);
+				
+			break;
+				
+			case ( is_array($identifer) ):
+				
+				$entity = $this->entity->firstOrNew($params);
+				
+			break;
+				
+			case ( is_string($params) && ! is_null($value) ):
+				
+				$entity = $this->entity->where($params, $value)->firstOrNew();
+				
+			break;
+				
 		}
-
+		
 		$entity = $this->map($this->data, $entity);
 		$entity->save();
 
