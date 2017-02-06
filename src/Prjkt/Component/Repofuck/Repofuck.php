@@ -475,14 +475,7 @@ abstract class Repofuck
 				
 				$entity = $this->entity->firstOrNew($params);
 				
-			break;
-				
-			case ( is_string($params) && ! is_null($value) ):
-				
-				$entity = $this->entity->where($params, $value)->firstOrNew();
-				
-			break;
-				
+			break;				
 		}
 		
 		$entity = $this->map($this->data, $entity);
