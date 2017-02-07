@@ -459,12 +459,6 @@ abstract class Repofuck
 	{
 		switch ($identifier) 
 		{
-			case null:
-				
-				$entity = new $this->entity;
-				
-			break;
-				
 			case ( is_numeric($identifer) ):
 				
 				$entity = $this->entity->findOrNew($params, $this->columns);
@@ -475,7 +469,13 @@ abstract class Repofuck
 				
 				$entity = $this->entity->firstOrNew($params);
 				
-			break;				
+			break;
+			
+			default:
+				
+				$entity = new $this->entity;
+				
+			break;
 		}
 		
 		$entity = $this->map($this->data, $entity);
