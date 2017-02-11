@@ -328,13 +328,13 @@ abstract class Repofuck
 
 				$params = ! $this->hasValues($params) ? $this->getData() : $params;
 
-				$entity = $this->entity->where($params)->firstOrFail($this->getColumns());
+				$entity = $this->entity->where($params)->firstOrFail($this->columns);
 
 			break;
 
 			case ( is_string($params) && ! is_null($value) ):
 
-				$entity = $this->entity->where($params, $value)->firstOrFail();
+				$entity = $this->entity->where($params, $value)->firstOrFail($this->columns);
 
 			break;
 		}
@@ -399,11 +399,13 @@ abstract class Repofuck
 	/**
 	 * Gets an entity by parameters
 	 *
+	 * @param array $columns
 	 * @return \Illuminate\Database\Eloquent\Collection
 	 */
-	public function get() : Collection
+	public function get($columns = null) : Collection
 	{
-		return $this->entity->get();
+		$columns = is_null($columns) ? $this->columns : $columns;
+		return $this->entity->get($columns);
 	}
 
 	/**
