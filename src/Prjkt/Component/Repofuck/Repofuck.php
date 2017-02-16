@@ -402,10 +402,9 @@ abstract class Repofuck
 	 * @param array $columns
 	 * @return \Illuminate\Database\Eloquent\Collection
 	 */
-	public function get($columns = null) : Collection
+	public function get() : Collection
 	{
-		$columns = is_null($columns) ? $this->columns : $columns;
-		return $this->entity->get($columns);
+		return $this->entity->get($this->columns);
 	}
 
 	/**
