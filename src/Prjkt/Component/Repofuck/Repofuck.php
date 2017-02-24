@@ -261,7 +261,7 @@ abstract class Repofuck
 	 */
 	public function find($id) : Model
 	{
-		return $this->entity->find($id);
+		return $this->entity->find($id, $this->columns);
 	}
 
 	/**
@@ -278,7 +278,7 @@ abstract class Repofuck
 		{
 			case ( is_numeric($params) ):
 
-				$entity = $this->entity->findOrFail($params);
+				$entity = $this->entity->findOrFail($params, $this->columns);
 
 			break;
 
@@ -292,7 +292,7 @@ abstract class Repofuck
 
 			case ( is_string($params) && ! is_null($value) ):
 
-				$entity = $this->entity->where($params, $value)->firstOrFail();
+				$entity = $this->entity->where($params, $value)->firstOrFail($this->columns);
 
 			break;
 		}
@@ -303,11 +303,12 @@ abstract class Repofuck
 	/**
 	 * Gets an entity by parameters
 	 *
+	 * @param array $columns
 	 * @return \Illuminate\Database\Eloquent\Collection
 	 */
 	public function get() : Collection
 	{
-		return $this->entity->get();
+		return $this->entity->get($this->columns);
 	}
 
 	/**
@@ -355,6 +356,41 @@ abstract class Repofuck
 	}
 
 	/**
+	 * Finds an entity and updates it. It's created when it's non-existent  
+	 *
+	 * @param mixed int|string|array
+	 * @return \Illuminate\Database\Eloquent\Model $entity
+	 */
+	public function updateOrCreate($identifier) : Model
+	{
+		switch ($identifier) 
+		{
+			case ( is_numeric($identifer) ):
+				
+				$entity = $this->entity->findOrNew($params, $this->columns);
+				
+			break;
+				
+			case ( is_array($identifer) ):
+				
+				$entity = $this->entity->firstOrNew($params);
+				
+			break;
+			
+			default:
+				
+				$entity = new $this->entity;
+				
+			break;
+		}
+		
+		$entity = $this->map($this->data, $entity);
+		$entity->save();
+
+		return $entity;
+	}
+
+	/**
 	 * Deletes the entity
 	 *
 	 * @return boolean
@@ -389,7 +425,7 @@ abstract class Repofuck
 			foreach($inserts as $key => $val)
 			{
 				if ( ! in_array($key, $keys) ) {
-					break;
+					continue;
 				}
 
 				$entity->{$key} = $val;
