@@ -177,7 +177,7 @@ abstract class Repofuck
 			
 			$return = call_user_func_array($closure, [$this->entity]);
 
-			if ( ! $return instanceof Model || ! $return instanceof Builder ) {
+			if ( ! $return instanceof Model && ! $return instanceof Builder ) {
 				throw new InvalidCallbackReturn;
 			}
 
@@ -269,8 +269,7 @@ abstract class Repofuck
 	 *
 	 * @param integer|array|string
 	 * @param string $value
-	 * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
-	 * @return \Illuminate\Database\Eloquent\Model
+	 * @return \Illuminate\Database\Eloquent\Model|boolean
 	 */
 	public function first($params, $value = null)
 	{
@@ -278,7 +277,7 @@ abstract class Repofuck
 		{
 			case ( is_numeric($params) ):
 
-				$entity = $this->entity->findOrFail($params, $this->columns);
+				$entity = $this->entity->find($params, $this->columns);
 
 			break;
 
@@ -286,13 +285,13 @@ abstract class Repofuck
 
 				$params = ! $this->hasValues($params) ? $this->data : $params;
 
-				$entity = $this->entity->where($params)->firstOrFail($this->columns);
+				$entity = $this->entity->where($params)->first($this->columns);
 
 			break;
 
 			case ( is_string($params) && ! is_null($value) ):
 
-				$entity = $this->entity->where($params, $value)->firstOrFail($this->columns);
+				$entity = $this->entity->where($params, $value)->first(($this->columns);
 
 			break;
 		}
@@ -424,7 +423,7 @@ abstract class Repofuck
 
 			foreach($inserts as $key => $val)
 			{
-				if ( ! in_array($key, $keys) ) {
+				if ( ! in_array($key, $inserts) ) {
 					continue;
 				}
 

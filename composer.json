@@ -12,11 +12,11 @@
 
     "require": {
         "php": ">=7.0.0",
-        "illuminate/support": "5.1.*|5.2.*|5.3.*",
-        "illuminate/database": "5.1.*|5.2.*|5.3.*",
-        "illuminate/pagination": "5.1.*|5.2.*|5.3.*",
-        "illuminate/container": "5.1.*|5.2.*|5.3.*",
-        "illuminate/contracts": "5.1.*|5.2.*|5.3.*"
+        "illuminate/support": "^5.1",
+        "illuminate/database": "^5.1",
+        "illuminate/pagination": "^5.1",
+        "illuminate/container": "^5.1",
+        "illuminate/contracts": "^5.1"
     },
 
     "require-dev": {
