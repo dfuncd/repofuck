@@ -482,7 +482,7 @@ abstract class Repofuck
 
 			foreach($inserts as $key => $val)
 			{
-				if ( ! in_array($key, $keys) ) {
+				if ( ! in_array($key, $inserts) ) {
 					continue;
 				}
 
