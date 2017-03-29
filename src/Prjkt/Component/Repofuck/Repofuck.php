@@ -333,7 +333,7 @@ abstract class Repofuck
 
 			case ( is_string($params) && ! is_null($value) ):
 
-				$entity = $this->entity->where($params, $value)->first();
+				$entity = $this->entity->where($params, $value)->first($this->columns);
 
 			break;
 		}
