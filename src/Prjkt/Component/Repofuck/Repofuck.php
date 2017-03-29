@@ -327,7 +327,7 @@ abstract class Repofuck
 
 				$params = ! $this->hasValues($params) ? $this->getData() : $params;
 
-				$entity = $this->entity->where($params)->first($this->getColumns());
+				$entity = $this->entity->where($params)->first($this->columns);
 
 			break;
 
