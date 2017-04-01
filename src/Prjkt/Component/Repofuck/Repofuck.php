@@ -291,7 +291,7 @@ abstract class Repofuck
 
 			case ( is_string($params) && ! is_null($value) ):
 
-				$entity = $this->entity->where($params, $value)->first(($this->columns);
+				$entity = $this->entity->where($params, $value)->first($this->columns);
 
 			break;
 		}
@@ -383,6 +383,26 @@ abstract class Repofuck
 			break;
 		}
 		
+		$entity = $this->map($this->data, $entity);
+		$entity->save();
+
+		return $entity;
+	}
+
+	/**
+	 * Finds an entity and updates it. It's created when it's non-existent  
+	 *
+	 * @param mixed int|string|array|\Illuminate\Database\Eloquent\Model $entity
+	 * @return \Illuminate\Database\Eloquent\Model $entity
+	 */
+	public function updateOrCreate($identifier) : Model
+	{
+		$entity = $identifier;
+
+		if (! $entity instanceof Model) {
+			$entity = $this->first($identifier) ?? new $this->entity;
+		}
+
 		$entity = $this->map($this->data, $entity);
 		$entity->save();
 
