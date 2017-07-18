@@ -503,7 +503,7 @@ abstract class Repofuck
 			case is_array($query):
 
 				foreach($query as $clause) {
-					$this->entity->where($clause);
+					$this->entity = $this->entity->where($clause);
 				}
 
 			break;
