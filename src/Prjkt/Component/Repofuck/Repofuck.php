@@ -36,7 +36,7 @@ abstract class Repofuck
 	 *
 	 * @var \Illuminate\Database\Eloquent\Model
 	 */
-	public $entity;
+	protected $entity;
 
 	/**
 	 * Entities container
@@ -165,11 +165,13 @@ abstract class Repofuck
 	 * Sets the entity to be chained
 	 *
 	 * @param string $name
+	 * @param Closure $closure
+	 * @throws Prjkt\Component\Repofuck\Exceptions\InstanceNotEntityException
 	 * @return self
 	 */
 	public function entity(string $name = null, Closure $closure = null) : self
 	{
-		$this->entity = $this->entities->resolve($name);
+		$entity = $this->entity = $this->entities->resolve($name);
 
 		if ( $closure instanceof Closure ) {
 			
@@ -197,44 +199,18 @@ abstract class Repofuck
 	}
 
 	/**
-	 * [Deprecated] Set the data and keys for the repository
+	 * Set the fill data and keys for the repository
 	 *
 	 * @param array $parameters
 	 * @return self
 	 */
-	public function setDataAndKeys(array $parameters) : self
-	{
-		return $this->data($parameters, true);
-	}
-
-	/**
-	 * Set the data and keys for the repository
-	 *
-	 * @param array $parameters
-	 * @param bool $keys [def=false] Set the keys
-	 * @return self
-	 */
-	public function data(array $parameters, bool $keys = false) : self
+	public function fill(array $parameters) : self
 	{
 		if ( $keys ) {
-			$keys = array_keys($parameters);
-			$this->setKeys($keys);
+			$this->keys(array_keys($keys));
 		}
 
-		$this->setData($parameters);
-
-		return $this;
-	}
-
-	/**
-	 * Set the columns to be queried
-	 *
-	 * @param array $columns
-	 * @return self
-	 */
-	public function setColumns(array $columns) : self
-	{
-		$this->columns = $columns;
+		$this->data($parameters);
 
 		return $this;
 	}
@@ -245,7 +221,7 @@ abstract class Repofuck
 	 * @param array
 	 * @return self
 	 */
-	public function setData(array $data) : self
+	public function data(array $data = []) : self
 	{
 		$this->data = $data;
 
@@ -258,7 +234,7 @@ abstract class Repofuck
 	 * @param array
 	 * @return self
 	 */
-	public function setKeys(array $keys) : self
+	public function keys(array $keys = []) : self
 	{
 		$this->keys = $keys;
 
@@ -266,33 +242,15 @@ abstract class Repofuck
 	}
 
 	/**
-	 * Get the columns
+	 * Set the columns for the repository
 	 *
-	 * @return array
+	 * @return $this
 	 */
-	public function getColumns() : array
+	public function columns(array $columns = []) : self
 	{
-		return $this->columns;
-	}
+		$this->columns = $columns;
 
-	/**
-	 * Get the data in the repository
-	 *
-	 * @return array
-	 */
-	public function getData() : array
-	{
-		return $this->data;
-	}
-
-	/**
-	 * Get the keys in the repository
-	 *
-	 * @return array
-	 */
-	public function getKeys() : array
-	{
-		return $this->keys;
+		return $this;
 	}
 
 	/**
@@ -325,15 +283,15 @@ abstract class Repofuck
 
 			case ( is_array($params) ):
 
-				$params = ! $this->hasValues($params) ? $this->getData() : $params;
+				$params = ! $this->hasValues($params) ? $this->data : $params;
 
-				$entity = $this->entity->where($params)->first($this->getColumns());
+				$entity = $this->entity->where($params)->first($this->columns);
 
 			break;
 
 			case ( is_string($params) && ! is_null($value) ):
 
-				$entity = $this->entity->where($params, $value)->first();
+				$entity = $this->entity->where($params, $value)->first($this->columns);
 
 			break;
 		}
@@ -342,67 +300,14 @@ abstract class Repofuck
 	}
 
 	/**
-	 * Prepares the persistence of a repository or entity
-	 *
-	 * @param \Closure $function
-	 * @return self
-	 */
-	public function prepare(Closure $function) : self
-	{
-		$return = call_user_func_array($function, [($this)->resetEntity()]);
-
-		switch($return)
-		{
-			case null:
-
-				return $this;
-
-			break;
-			
-			case ( $return instanceof Builder or $return instanceof Model ):
-
-				// This will persist the entity throughout the repository for the next operation
-				$this->entity = $return;
-
-			break;
-
-			case ( $return instanceof self && $return instanceof $this ):
-
-				// Returns a modified persistence of itself where operations are contained
-				return $return;
-
-			break;
-
-			case ( $return instanceof self && ! $return instanceof $this ):
-
-				// This will persist the repository for the next operation
-				// It also gives an advantage as the repository contained
-				$this->repositories->set($return);
-
-				return $this->repositories->resolve();
-
-			break;
-
-			case ( is_array($return) ):
-
-				// This will persist the keys and data returned
-				$this->setDataAndKeys($return);
-
-			break;
-		}
-
-		// If there's a repository being persisted, return it, defer to self when there's none
-		return $this;
-	}
-
-	/**
 	 * Gets an entity by parameters
 	 *
+	 * @param array $columns
 	 * @return \Illuminate\Database\Eloquent\Collection
 	 */
 	public function get() : Collection
 	{
-		return $this->entity->get();
+		return $this->entity->get($this->columns);
 	}
 
 	/**
@@ -426,7 +331,8 @@ abstract class Repofuck
 	{
 		$this->entity = new $this->entity;
 		
-		$entity = $this->map($this->getData());
+		$entity = $this->map($this->data);
+		
 		$entity->save();
 
 		return $entity;
@@ -441,8 +347,63 @@ abstract class Repofuck
 	public function update($identifier) : Model
 	{
 		$entity = $identifier instanceof Model ? $identifier : $this->first($identifier);
-		$entity = $this->map($this->getData(), $entity);
+		$entity = $this->map($this->data, $entity);
 
+		$entity->save();
+
+		return $entity;
+	}
+
+	/**
+	 * Finds an entity and updates it. It's created when it's non-existent  
+	 *
+	 * @param mixed int|string|array
+	 * @return \Illuminate\Database\Eloquent\Model $entity
+	 */
+	public function updateOrCreate($identifier) : Model
+	{
+		switch ($identifier) 
+		{
+			case ( is_numeric($identifer) ):
+				
+				$entity = $this->entity->findOrNew($params, $this->columns);
+				
+			break;
+				
+			case ( is_array($identifer) ):
+				
+				$entity = $this->entity->firstOrNew($params);
+				
+			break;
+			
+			default:
+				
+				$entity = new $this->entity;
+				
+			break;
+		}
+		
+		$entity = $this->map($this->data, $entity);
+		$entity->save();
+
+		return $entity;
+	}
+
+	/**
+	 * Finds an entity and updates it. It's created when it's non-existent  
+	 *
+	 * @param mixed int|string|array|\Illuminate\Database\Eloquent\Model $entity
+	 * @return \Illuminate\Database\Eloquent\Model $entity
+	 */
+	public function updateOrCreate($identifier) : Model
+	{
+		$entity = $identifier;
+
+		if (! $entity instanceof Model) {
+			$entity = $this->first($identifier) ?? new $this->entity;
+		}
+
+		$entity = $this->map($this->data, $entity);
 		$entity->save();
 
 		return $entity;
@@ -542,7 +503,7 @@ abstract class Repofuck
 			case is_array($query):
 
 				foreach($query as $clause) {
-					$this->entity->where($clause);
+					$this->entity = $this->entity->where($clause);
 				}
 
 			break;
